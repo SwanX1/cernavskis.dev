@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -8,9 +10,6 @@ const slowdown = require('express-slow-down');
 
 if (!process.cwd().endsWith('src'))
     process.chdir('src');
-
-if (!process.env.PORT)
-    process.env.PORT = process.argv.slice(2)[0] || 8080;
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -29,4 +28,12 @@ app.use((req, res) => {
     res.end();
 });
 
-app.listen(process.env.PORT, '0.0.0.0', () => console.log('Listening on port', process.env.PORT));
+const server = https.createServer({
+    key: fs.readFileSync('../cert/private.key'),
+    cert: fs.readFileSync('../cert/certificate.crt')
+}, app);
+
+if (!process.env.PORT) // Get environment PORT, command line PORT, default to 443.
+    process.env.PORT = process.argv.slice(2).find((value, index, array) => array[index - 1] === '--port') || 443;
+
+server.listen(Number(process.env.PORT), '0.0.0.0', () => console.log('Listening on port', Number(process.env.PORT)));
