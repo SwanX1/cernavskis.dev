@@ -6,6 +6,9 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const slowdown = require('express-slow-down');
 
+if (!process.cwd().endsWith('src'))
+    process.chdir('src');
+
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(slowdown({
