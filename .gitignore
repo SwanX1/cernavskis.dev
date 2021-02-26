@@ -105,3 +105,7 @@ dist
 
 # HTTPS Private Keys
 cert/
+
+# Server config file
+config.json5
+config.json

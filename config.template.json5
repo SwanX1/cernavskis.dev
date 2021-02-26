@@ -1,0 +1,25 @@
+{
+    /* 
+     * Port that the server should listen to.
+     * Overrides PORT environment variable.
+     * Defaults to: 8080
+     */
+    port: 80,
+    /* 
+     * Hostname that the server should listen to.
+     * Overrides HOST environment variable.
+     * Defaults to: '0.0.0.0'
+     */
+    host: '0.0.0.0',
+    /* 
+     * Determines if server should use https.
+     * Defaults to: false
+     */
+    https: false,
+    /*
+     * SSL Certificate directory.
+     * Certificate and private key files must be named 'certificate.crt' and 'private.key' accordingly.
+     * Defaults to: 'cert'
+     */
+    certdir: 'cert',
+}
