@@ -109,3 +109,9 @@ cert/
 # Server config file
 config.json5
 config.json
+
+# CSS Dependencies, installed via yarn
+
+src/public/css/spectre.css
+src/public/css/spectre-exp.css
+src/public/css/spectre-icons.css

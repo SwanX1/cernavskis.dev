@@ -6,12 +6,17 @@
   "repository": "github.com/SwanX1/cernavskis.dev.git",
   "author": "SwanX1 <karliscern@gmail.com>",
   "license": "Apache-2.0",
+  "scripts": {
+    "postinstall": "node postinstall.js"
+  },
   "dependencies": {
+    "chalk": "^4.1.0",
     "express": "^4.17.1",
     "express-slow-down": "^1.4.0",
     "helmet": "^4.4.1",
     "json5": "^2.2.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "spectre.css": "^0.5.9"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
