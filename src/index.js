@@ -15,17 +15,17 @@ port = Number(getArgument('--port', '-P')) || config.port || Number(process.env.
 hostname = getArgument('--host', '-H') ?? config.host ?? process.env.HOST ?? '0.0.0.0';
 
 if (!process.cwd().endsWith('src'))
-    process.chdir('src');
+  process.chdir('src');
 
 let server;
 if (config.https || hasFlag('--https')) {
-    const certPath = path.join('..', getArgument('--cert', '-C') || config.certdir || 'cert');
-    server = https.createServer({
-        key: fs.readFileSync(path.join(certPath, 'private.key')),
-        cert: fs.readFileSync(path.join(certPath, 'certificate.crt'))
-    }, app);
+  const certPath = path.join('..', getArgument('--cert', '-C') || config.certdir || 'cert');
+  server = https.createServer({
+    key: fs.readFileSync(path.join(certPath, 'private.key')),
+    cert: fs.readFileSync(path.join(certPath, 'certificate.crt'))
+  }, app);
 } else {
-    server = http.createServer(app);
+  server = http.createServer(app);
 }
 
 server.listen(port, hostname, () => console.log('Listening on port', port));
@@ -36,12 +36,12 @@ server.listen(port, hostname, () => console.log('Listening on port', port));
  * @param  {...string} identifiers
  */
 function getArgument(...identifiers) {
-    let value;
-    for (const identifier of identifiers) {
-        value = process.argv.slice(2).find((value, index, array) => array[index - 1] === identifier);
-        if (value) break;
-    }
-    return value ?? null; // Return null if undefined
+  let value;
+  for (const identifier of identifiers) {
+    value = process.argv.slice(2).find((value, index, array) => array[index - 1] === identifier);
+    if (value) break;
+  }
+  return value ?? null; // Return null if undefined
 }
 
 /**
@@ -49,5 +49,5 @@ function getArgument(...identifiers) {
  * @param  {...string} identifiers
  */
 function hasFlag(...identifiers) {
-    return process.argv.slice(2).some(value => identifiers.includes(value));
+  return process.argv.slice(2).some(value => identifiers.includes(value));
 }
