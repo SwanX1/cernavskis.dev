@@ -5,6 +5,7 @@ const app = express();
 const morgan = require('morgan');
 const helmet = require('helmet');
 const slowdown = require('express-slow-down');
+const chalk = require('chalk');
 
 if (!process.cwd().endsWith('src'))
   process.chdir('src');
@@ -14,7 +15,7 @@ app.use(helmet());
 app.use(slowdown({
   delayAfter: 100,
   windowMs: 10000, // 10 seconds
-  onLimitReached: (req, res) => console.log(`${req.ip} has exceeded 100 requests in 10 seconds, possible DDOS attack?`)
+  onLimitReached: (req, res) => console.log(chalk`{green ${req.ip}} has exceeded 100 requests in 10 seconds, possible DDOS attack?`)
 }));
 app.use(express.static('./public'));
 

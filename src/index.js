@@ -6,7 +6,7 @@ const http = require('http');
 const https = require('https');
 const app = require('./app');
 const json5 = require('json5');
-
+const chalk = require('chalk');
 // Set config variables
 const config = json5.parse(fs.readFileSync('../config.json5'));
 let port, hostname;
@@ -28,7 +28,7 @@ if (config.https || hasFlag('--https')) {
   server = http.createServer(app);
 }
 
-server.listen(port, hostname, () => console.log('Listening on port', port));
+server.listen(port, hostname, () => console.log(chalk`Listening on port {yellow ${port}}`));
 
 /**
  * Gets arguments from process.argv,
