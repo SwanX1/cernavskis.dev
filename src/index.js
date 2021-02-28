@@ -30,6 +30,21 @@ if (config.https || hasFlag('--https')) {
 
 server.listen(port, hostname, () => console.log(chalk`Listening on port {yellow ${port}}`));
 
+const signals = ['beforeExit', 'uncaughtException', 'serverError', 'SIGTSTP', 'SIGQUIT', 'SIGHUP', 'SIGTERM', 'SIGINT', 'SIGUSR2'];
+signals.forEach((signal) => process.on(signal, () => {
+  console.log('Shutting down...');
+  server.close();
+  process.exit(e);
+}));
+
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.log(chalk`Address {yellow ${hostname}}:{yellow ${port}} is in use`);
+    process.emit('serverError');
+  }
+});
+
 /**
  * Gets arguments from process.argv,
  * returns undefined if not set
