@@ -14,7 +14,7 @@
     "express": "^4.17.1",
     "express-slow-down": "^1.4.0",
     "helmet": "^4.4.1",
-    "json5": "^2.2.0",
+    "json5": "^2.2.2",
     "morgan": "^1.10.0",
     "spectre.css": "^0.5.9"
   },
