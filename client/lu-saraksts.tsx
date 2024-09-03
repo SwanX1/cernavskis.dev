@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     removeAllChildren(tableContainer);
-    tableContainer.appendChild(createDataTable(parseLine(input.value)));
+    tableContainer.appendChild(<div>{createDataTable(parseLine(input.value))}</div>);
     example.style.display = "none";
   });
 
@@ -88,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <footer class="text-center text-gray mt-18">
             Izmantoti tikai publiski resursi no LUDF mājaslapas.<br />
-            Autortiesības aizsargātas. &copy; Kārlis Čerņavskis, {new Date().getFullYear()}
+            Autortiesības aizsargātas. &copy; Kārlis Čerņavskis, {new Date().getFullYear()}<br />
+            Šī vietne izmanto sīkdatnes tikai tās funkcionalitātei, tās nav konfigurējamas.
           </footer>
         </div>
       </div>
