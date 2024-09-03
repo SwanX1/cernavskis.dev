@@ -2,7 +2,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
@@ -12,4 +12,8 @@ body {
 
 .m-6 {
   margin: 24px;
+}
+
+.mt-18 {
+  margin-top: 72px;
 }

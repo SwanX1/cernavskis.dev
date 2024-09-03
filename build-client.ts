@@ -19,7 +19,10 @@ async function copySpectre() {
 
 async function build() {
   const buildOutput = await Bun.build({
-    entrypoints: ['./client/index.tsx'],
+    entrypoints: [
+      './client/index.tsx',
+      './client/lu-saraksts.tsx'
+    ],
     root: './client',
     format: 'esm',
     minify: true,
@@ -35,29 +38,25 @@ async function build() {
     process.exit(1);
   }
   
-  if (buildOutput.outputs.length !== 1) {
-    console.error('Expected one output file, got ' + buildOutput.outputs.length);
-    process.exit(1);
+  
+  for (const output of buildOutput.outputs) {
+    if (output.kind !== 'entry-point') {
+      console.error('Expected output to be an entry-point, got ' + output.kind);
+      process.exit(1);
+    }
+    
+    const filepath = new URL(output.path, new URL("./public/", import.meta.url));
+    const dirpath = new URL('..', filepath);
+    
+    await mkdir(dirpath, { recursive: true });
+    const outfile = Bun.file(filepath);
+    
+    if (await outfile.exists()) {
+      await unlink(filepath);
+    }
+    
+    await Bun.write(outfile, output);
   }
-  
-  const [output] = buildOutput.outputs;
-  
-  if (output.kind !== 'entry-point') {
-    console.error('Expected output to be an entry-point, got ' + output.kind);
-    process.exit(1);
-  }
-  
-  const filepath = new URL(output.path, new URL("./public/", import.meta.url));
-  const dirpath = new URL('..', filepath);
-  
-  await mkdir(dirpath, { recursive: true });
-  const outfile = Bun.file(filepath);
-  
-  if (await outfile.exists()) {
-    await unlink(filepath);
-  }
-  
-  await Bun.write(outfile, output);
 }
 
 await Promise.all(promises);
