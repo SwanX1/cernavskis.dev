@@ -31,7 +31,7 @@ const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" da
 const submit = <button class="btn btn-primary mx-1">Vienkāršot!</button>;
 const remember = <input type="checkbox"></input>;
 const tableContainer = <div></div> as HTMLDivElement;
-const example = <p class="form-input-hint">Piemērs kopējamai rindiņai: <code>45 Kārlis Čerņavskis I 1.T-8.30 T-10.30 Pr-12.30 Pr-10.30 O-10.30 Pr-10.30 O-12.30 T-12.30 C-12.30 (2) C-10.30 (2a) 2.C-14.30 (2a) 5., 8., 10., 14.,16. ned. C-18.15 (F) O-18.15</code></p>;
+const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā. Jāuzspiež uz viņa, lai tiktu ievadīti (diezgan gari) dati par lekcijām.</p>;
 
 document.addEventListener("DOMContentLoaded", () => {
   remember.checked = localGetOrDefault("shouldRemember", "false") === "true" ? true : false;
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="form-group form-autocomplete">
             <label for="input-data" class="form-label">
-              Ievadiet savu grupas saraksta rindiņu, vai ieraksti savu vārdu:
+            Ierakstiet savu vārdu<span class="text-gray">, vai ievadiet savu grupas saraksta rindiņu:</span>
             </label>
             <div class="form-autocomplete-input">
               { input }
