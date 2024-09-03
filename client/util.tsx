@@ -25,7 +25,7 @@ export function createTable(headers: (string | HTMLElement)[], entries: (string 
     tableBody.appendChild(rowElement);
   }
 
-  return <table class="table table-striped">
+  return <table class="table">
     <thead>
       { headerRow }
     </thead>

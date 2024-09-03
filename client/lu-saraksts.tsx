@@ -27,8 +27,8 @@ for (const name of Object.keys(PEOPLE)) {
 }
 
 const input = <input type="text" class="form-input" id="input-data"></input>;
-const exportButton = <button class="btn disabled tooltip tooltip-bottom m-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
-const submit = <button class="btn btn-primary m-1">Vienkāršot!</button>;
+const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
+const submit = <button class="btn btn-primary mx-1">Vienkāršot!</button>;
 const remember = <input type="checkbox"></input>;
 const tableContainer = <div></div> as HTMLDivElement;
 const example = <p class="form-input-hint">Piemērs kopējamai rindiņai: <code>45 Kārlis Čerņavskis I 1.T-8.30 T-10.30 Pr-12.30 Pr-10.30 O-10.30 Pr-10.30 O-12.30 T-12.30 C-12.30 (2) C-10.30 (2a) 2.C-14.30 (2a) 5., 8., 10., 14.,16. ned. C-18.15 (F) O-18.15</code></p>;
@@ -227,7 +227,8 @@ function createDataTable(data: PersonData): HTMLElement {
       DAY_LOCALE[lection.day as keyof typeof DAY_LOCALE],
       lection.weekFilter === "even" ? "Pāra nedēļās" :
         lection.weekFilter === "odd" ? "Nepāra nedēļās" :
-          Array.isArray(lection.weekFilter) ? `Nedēļās ${lection.weekFilter.join(", ")}` : "",
+          Array.isArray(lection.weekFilter) ? `Nedēļās ${lection.weekFilter.join(", ")}` :
+            <span class="text-gray">Katru nedēļu</span>,
       TIME_TO_RANGE[lection.time as keyof typeof TIME_TO_RANGE],
       lection.group ?? "",
       openButton,
@@ -236,7 +237,7 @@ function createDataTable(data: PersonData): HTMLElement {
 
   const tableElement = createTable(["Kurss", "Diena", "", "Laiks", "Grupa", ""], lections);
 
-  const closeButton = <button class="btn float-right">Aizvērt tabulu <i class="icon icon-cross"></i></button>;
+  const closeButton = <button class="btn float-right m-1">Aizvērt tabulu <i class="icon icon-cross"></i></button>;
 
   closeButton.addEventListener("click", () => {
     removeAllChildren(tableContainer);
@@ -252,10 +253,9 @@ function createDataTable(data: PersonData): HTMLElement {
   const weekOrdinal = WEEK_ORDINALS[weekID as keyof typeof WEEK_ORDINALS];
 
   return <>
-    <p class="py-2"></p>
-    { closeButton }
     <p class="mb-1">Lekciju saraksts: { data.name }, { data.stream } plūsma</p>
-    <p class="mb-1 text-gray">Šobrīd ir {weekOrdinal}. nedēļa, { weekOrdinal % 2 === 0 ? "pāra" : "nepāra" }</p>
+    { closeButton }
+    <p class="text-gray">Šobrīd ir {weekOrdinal}. nedēļa, { weekOrdinal % 2 === 0 ? "pāra" : "nepāra" }</p>
     { tableElement }
   </>;
 }
