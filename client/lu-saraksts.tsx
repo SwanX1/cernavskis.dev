@@ -224,7 +224,7 @@ function createDataTable(data: PersonData): HTMLElement {
           lection.name === "DatZB067L" ?
             <InfoTooltip position="right">Kurss sākas tikai ar 4. nedēļu</InfoTooltip> :
           lection.name === "DatZB018" && lection.day === "Pr" ?
-            <InfoTooltip position="right">{"Saraksta kļūda - īstenībā ir\notrdienā, plkst. 14:30"}</InfoTooltip> :
+            <InfoTooltip position="right">Saraksta kļūda - īstenībā ir otrdienā, plkst. 14:30</InfoTooltip> :
             <></>
         }
       </>,
