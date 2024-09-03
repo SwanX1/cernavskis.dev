@@ -1,4 +1,4 @@
-import { _createElement, _fragment } from "simple-jsx-handler";
+import { _createElement, _fragment, type ElementAttributes } from "simple-jsx-handler";
 import { createTable, localGetOrDefault, removeAllChildren } from "./util";
 import { DAY_LOCALE, LECTION_LINKS, LECTION_NAMES, PEOPLE, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
 
@@ -221,8 +221,11 @@ function createDataTable(data: PersonData): HTMLElement {
       <>
         { LECTION_NAMES[lection.name as keyof typeof LECTION_NAMES] }
         {
-          lection.name === "DatZB067L" ?    
-          <span class="p-2 tooltip tooltip-right" style="user-select: none;" data-tooltip="Kurss sākas tikai ar 4. nedēļu"><span style="font-family: monospace;">i</span></span> : <></>
+          lection.name === "DatZB067L" ?
+            <InfoTooltip position="right">Kurss sākas tikai ar 4. nedēļu</InfoTooltip> :
+          lection.name === "DatZB018" && lection.day === "Pr" ?
+            <InfoTooltip position="right">{"Saraksta kļūda - īstenībā ir\notrdienā, plkst. 14:30"}</InfoTooltip> :
+            <></>
         }
       </>,
       DAY_LOCALE[lection.day as keyof typeof DAY_LOCALE],
@@ -260,6 +263,28 @@ function createDataTable(data: PersonData): HTMLElement {
     { tableElement }
   </>;
 }
+
+const InfoTooltip = (attrs: ElementAttributes, ...children: Node[]) => {
+  if (children.length !== 1) {
+    throw new Error("Invalid children count");
+  }
+
+  if (typeof children[0] !== "string") {
+    throw new Error("Invalid children type");
+  }
+
+  const tooltipText = children[0] ?? "";
+  const position = attrs.position ?? "top";
+
+  if (position !== "top" && position !== "bottom" && position !== "left" && position !== "right") {
+    throw new Error("Invalid position");
+  }
+
+  return <>
+    <br />
+    <span class="text-error">{ tooltipText }</span>
+  </>;
+};
 
 function createAutocompleteMenu(allStrings: Record<string, string>, input: HTMLInputElement): HTMLElement {
   const ul = <ul class="menu p-absolute"></ul>;
