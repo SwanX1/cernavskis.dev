@@ -21,7 +21,7 @@ async function build() {
   const buildOutput = await Bun.build({
     entrypoints: [
       './client/index.tsx',
-      './client/lu-saraksts.tsx'
+      './client/lu-saraksts.tsx',
     ],
     root: './client',
     format: 'esm',
