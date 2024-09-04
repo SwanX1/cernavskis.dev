@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 import { applyConfiguration, getLogger } from "./util";
 import chalk from "chalk-template";
 
@@ -7,6 +8,7 @@ const logger = getLogger();
 
 applyConfiguration(app);
 
+app.use(compression({ level: 9 }));
 app.use(express.static(new URL("../public", import.meta.url).pathname, {
   extensions: ["html"],
 }));
@@ -14,7 +16,7 @@ app.use(express.static(new URL("../public", import.meta.url).pathname, {
 
 logger.info(chalk`Bun\t{yellow ${Bun.version}}`);
 if (app.get("trust proxy")) {
-  logger.info("Assuming running behing proxy");
+  logger.info("Assuming running behind proxy");
 }
 
 app.listen(3000, () => logger.info("Running on port", 3000));

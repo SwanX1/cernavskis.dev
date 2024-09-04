@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@spectre-org/spectre-css": "^1.0.0",
+    "@types/compression": "^1.7.5",
     "chalk-template": "^1.1.0",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
