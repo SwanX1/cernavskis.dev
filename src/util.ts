@@ -60,6 +60,7 @@ export function applyConfiguration(app: Express): void {
             "'unsafe-inline'",
             "'unsafe-eval'"
           ],
+          'script-src-attr': ["'unsafe-inline'"],
         },
       },
       crossOriginEmbedderPolicy: false,
