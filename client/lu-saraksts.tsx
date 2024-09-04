@@ -1,6 +1,6 @@
 import { _createElement, _fragment, type ElementAttributes } from "simple-jsx-handler";
 import { createTable, localGetOrDefault, removeAllChildren } from "./util";
-import { DAY_LOCALE, LECTION_LINKS, LECTION_NAMES, getPeople, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
+import { DAY_LOCALE, LECTION_LINKS, LECTION_NAMES, getPeople, TIME_TO_RANGE, WEEK_ORDINALS, LECTION_ROOMS_PROFS, ROOMS, PROFS } from "./lu-dati";
 
 performSanityCheck();
 
@@ -208,18 +208,28 @@ function createDataTable(data: PersonData): HTMLElement {
       openButton = <button class="btn tooltip tooltip-left" data-tooltip={`Atvērt ${lection.name} e-studijās`}><i class="icon icon-link"></i></button>;
       openButton.addEventListener("click", () => window.location.assign(LECTION_LINKS[lection.name as keyof typeof LECTION_LINKS]));
     }
-    
 
+    let { room, prof } = getRoomAndProf(getLectionKey(lection)) ?? { room: null, prof: null };
+
+    if (!room) {
+      room = <span class="text-error">ERROR</span>;
+      console.error("No room found for lection " + getLectionKey(lection), lection);
+    }
+
+    if (!prof) {
+      console.error("No prof found for lection " + getLectionKey(lection), lection);
+    }
+    
     return [
       <>
         { LECTION_NAMES[lection.name as keyof typeof LECTION_NAMES] }
         {
           lection.name === "DatZB067L" ?
             <InfoTooltip position="right">Kurss sākas tikai ar 4. nedēļu</InfoTooltip> :
-          lection.name === "DatZB018" && lection.day === "Pr" ?
-            <InfoTooltip position="right">Saraksta kļūda - īstenībā ir otrdienā, plkst. 14:30</InfoTooltip> :
             <></>
         }
+        <br />
+        <span class="text-gray">{prof ?? "Pasniedzējs netika atrasts"}</span>
       </>,
       DAY_LOCALE[lection.day as keyof typeof DAY_LOCALE],
       lection.weekFilter === "even" ? "Pāra nedēļās" :
@@ -227,12 +237,13 @@ function createDataTable(data: PersonData): HTMLElement {
           Array.isArray(lection.weekFilter) ? `Nedēļās ${lection.weekFilter.join(", ")}` :
             <span class="text-gray">Katru nedēļu</span>,
       TIME_TO_RANGE[lection.time as keyof typeof TIME_TO_RANGE],
+      room,
       lection.group ?? "",
       openButton,
     ];
   });
 
-  const tableElement = createTable(["Kurss", "Diena", "", "Laiks", "Grupa", ""], lections);
+  const tableElement = createTable(["Kurss", "Diena", "", "Laiks", "Telpa", "Grupa", ""], lections);
 
   const closeButton = <button class="btn float-right m-1">Aizvērt tabulu <i class="icon icon-cross"></i></button>;
 
@@ -337,6 +348,21 @@ function createAutocompleteMenu(fetched: Promise<Record<string, string>>, input:
   });
 
   return ul;
+}
+
+function getLectionKey(lection: Lection): string {
+  return `${lection.day}${lection.time.split(":").map(str => str.padStart(2, "0")).join("")}${lection.name}${lection.group ?? ""}`;
+}
+
+function getRoomAndProf(lectionKey: string): { room: string, prof: string } | null {
+  if (!(lectionKey in LECTION_ROOMS_PROFS)) return null;
+
+  const [profKey, roomKey] = LECTION_ROOMS_PROFS[lectionKey as keyof typeof LECTION_ROOMS_PROFS];
+
+  return {
+    room: ROOMS[roomKey],
+    prof: PROFS[profKey],
+  };
 }
 
 async function performSanityCheck(): Promise<void> {
