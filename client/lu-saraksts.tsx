@@ -1,6 +1,8 @@
 import { _createElement, _fragment, type ElementAttributes } from "simple-jsx-handler";
 import { createTable, localGetOrDefault, removeAllChildren } from "./util";
-import { DAY_LOCALE, LECTION_LINKS, LECTION_NAMES, PEOPLE, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
+import { DAY_LOCALE, LECTION_LINKS, LECTION_NAMES, getPeople, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
+
+performSanityCheck();
 
 interface PersonData {
   id: number;
@@ -15,15 +17,6 @@ interface Lection {
   time: string;
   group?: string;
   weekFilter?: "even" | "odd" | number[];
-}
-
-// Perform sanity check
-for (const name of Object.keys(PEOPLE)) {
-  try {
-    parseLine(PEOPLE[name as keyof typeof PEOPLE]);
-  } catch (e) {
-    console.error("Failed sanity check for name:", name);
-  }
 }
 
 const input = <input type="text" class="form-input" id="input-data"></input>;
@@ -76,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="form-autocomplete-input">
               { input }
             </div>
-            { createAutocompleteMenu(PEOPLE, input) }
+            { createAutocompleteMenu(getPeople(), input) }
             { example }
             <div class="float-right">
               { exportButton }
@@ -286,11 +279,12 @@ const InfoTooltip = (attrs: ElementAttributes, ...children: Node[]) => {
   </>;
 };
 
-function createAutocompleteMenu(allStrings: Record<string, string>, input: HTMLInputElement): HTMLElement {
+function createAutocompleteMenu(fetched: Promise<Record<string, string>>, input: HTMLInputElement): HTMLElement {
   const ul = <ul class="menu p-absolute"></ul>;
   ul.style.display = "none";
 
-  input.addEventListener("input", () => {
+  input.addEventListener("input", async () => {
+    const allStrings = await fetched;
     const value = input.value.toLowerCase().trim();
     removeAllChildren(ul);
 
@@ -343,6 +337,18 @@ function createAutocompleteMenu(allStrings: Record<string, string>, input: HTMLI
   });
 
   return ul;
+}
+
+async function performSanityCheck(): Promise<void> {
+  const PEOPLE = await getPeople();
+  // Perform sanity check
+  for (const name of Object.keys(PEOPLE)) {
+    try {
+      parseLine(PEOPLE[name as keyof typeof PEOPLE]);
+    } catch (e) {
+      console.error("Failed sanity check for name:", name);
+    }
+  }
 }
 
 // function createICS(lections: Lection[]): string {
