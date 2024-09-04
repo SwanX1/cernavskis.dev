@@ -25,6 +25,7 @@ const submit = <button class="btn btn-primary mx-1">Vienkāršot!</button>;
 const remember = <input type="checkbox"></input>;
 const tableContainer = <div></div> as HTMLDivElement;
 const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā. Jāuzspiež uz viņa, lai tiktu ievadīti (diezgan gari) dati par lekcijām.</p>;
+const error = <p class="form-input-hint" style="display: none;">Notika kļūda! Paziņojiet par to administratoram!</p>;
 
 document.addEventListener("DOMContentLoaded", () => {
   remember.checked = localGetOrDefault("shouldRemember", "false") === "true" ? true : false;
@@ -39,13 +40,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   submit.addEventListener("click", () => {
-    if (remember.checked) {
-      window.localStorage.setItem("rememberedValue", input.value);
-    }
+    error.style.display = "none";
+    input.classList.remove("is-error");
 
-    removeAllChildren(tableContainer);
-    tableContainer.appendChild(<div>{createDataTable(parseLine(input.value))}</div>);
-    example.style.display = "none";
+    try {
+      if (remember.checked) {
+        window.localStorage.setItem("rememberedValue", input.value);
+      }
+  
+      removeAllChildren(tableContainer);
+      tableContainer.appendChild(<div>{createDataTable(parseLine(input.value))}</div>);
+      example.style.display = "none";
+    } catch (e) {
+      console.error("Error while doing the main shit", e);
+      error.style.display = "block";
+      input.classList.add("is-error");
+    }
   });
 
   document.body.appendChild(
@@ -68,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </label>
             <div class="form-autocomplete-input">
               { input }
+              { error }
             </div>
             { createAutocompleteMenu(getPeople(), input) }
             { example }
