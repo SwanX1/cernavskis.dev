@@ -176,5 +176,6 @@ dist
 
 # Project-specific
 /public/*.js
+/public/*.js.map
 /public/spectre.min.css
 /public/spectre-icons.min.css

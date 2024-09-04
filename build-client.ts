@@ -26,7 +26,7 @@ async function build() {
     root: './client',
     format: 'esm',
     minify: true,
-    sourcemap: 'inline',
+    sourcemap: 'external',
     target: 'browser',
   });
   
@@ -40,8 +40,8 @@ async function build() {
   
   
   for (const output of buildOutput.outputs) {
-    if (output.kind !== 'entry-point') {
-      console.error('Expected output to be an entry-point, got ' + output.kind);
+    if (output.kind !== 'entry-point' && output.kind !== 'sourcemap') {
+      console.error('Expected output to be an entry-point or sourcemap, got ' + output.kind);
       process.exit(1);
     }
     
