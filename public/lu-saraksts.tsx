@@ -1,9 +1,7 @@
-import { _createElement, _fragment, type ElementAttributes } from "simple-jsx-handler";
+import { _createElement, _fragment } from "simple-jsx-handler";
 import { getPeople } from "./lu-dati";
 import { displayTable, parseLine } from "./table-gen";
 import { localGetOrDefault, removeAllChildren } from "./util";
-
-console.log("HI!");
 
 performSanityCheck();
 
