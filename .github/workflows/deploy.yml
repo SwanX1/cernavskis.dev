@@ -25,13 +25,13 @@ jobs:
           -i ${{ steps.mktemp.outputs.tempfile }} \
           -o "StrictHostKeyChecking=accept-new" \
           deploy.sh \
-          deployment@cernavskis.dev:~/deploy.sh
+          deployment@${{ secrets.SSH_HOST }}:~/deploy.sh
       - name: Run deployment script on server
         run: |
           ssh \
           -l deployment \
           -i ${{ steps.mktemp.outputs.tempfile }} \
           -o "StrictHostKeyChecking=accept-new" \
-          cernavskis.dev \
+          ${{ secrets.SSH_HOST }} \
           "bash --login -e ~/deploy.sh; rm ~/deploy.sh"
 
