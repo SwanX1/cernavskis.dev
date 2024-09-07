@@ -1,1 +1,1 @@
-preload = ["./build-client.ts"]
+preload = ["./node_modules/bst-stack/build.ts"]

@@ -9,7 +9,7 @@ const logger = getLogger();
 applyConfiguration(app);
 
 app.use(compression({ level: 9 }));
-app.use(express.static(new URL("../public", import.meta.url).pathname, {
+app.use(express.static(new URL("../dist", import.meta.url).pathname, {
   extensions: ["html"],
 }));
 

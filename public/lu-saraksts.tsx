@@ -3,6 +3,8 @@ import { getPeople } from "./lu-dati";
 import { displayTable, parseLine } from "./table-gen";
 import { localGetOrDefault, removeAllChildren } from "./util";
 
+console.log("HI!");
+
 performSanityCheck();
 
 const input = <input type="text" class="form-input" id="input-data"></input>;

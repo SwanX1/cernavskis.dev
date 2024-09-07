@@ -1,0 +1,16 @@
+{
+  "source": "./public",
+  "destination": "./dist",
+  "clean": true,
+  "css": {
+    "minify": true
+  },
+  "html": {
+    "minify": true,
+    "minifyClasses": true,
+    "reduceBlocking": true
+  },
+  "js": {
+    "minify": true
+  }
+}
