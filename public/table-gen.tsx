@@ -1,7 +1,7 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
 import { createTable, removeAllChildren } from "./util";
-import { DAY_LOCALE, LECTION_LINKS, LECTION_NAMES, LECTION_ROOMS_PROFS, PROFS, ROOMS, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
-import { InfoTooltip } from "./InfoTooltip";
+import { DAY_LOCALE, DAY_LOCALE_SHORT, LECTION_LINKS, LECTION_NAMES, LECTION_NAMES_SHORT, LECTION_ROOMS_PROFS, PROFS, ROOMS, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
+import { createLectionModal } from "./LectionInfoModal";
 
 export interface PersonData {
   id: number;
@@ -11,6 +11,7 @@ export interface PersonData {
 }
 
 export interface Lection {
+  person: PersonData;
   name: string;
   day: string;
   time: string;
@@ -98,12 +99,18 @@ export function parseLine(line: string): PersonData {
     lections.push(currentLection as Lection);
   }
 
-  return {
+  const personData: PersonData = {
     id,
     name,
     stream,
     lections,
   };
+
+  for (const lection of lections) {
+    lection.person = personData;
+  }
+
+  return personData;
 }
 
 export function createDataTable(data: PersonData, onClose?: () => void): HTMLElement {
@@ -136,11 +143,17 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
       throw new Error("Invalid lection name");
     }
 
-    let openButton = <></>;
+    let linkButton = <></>;
     if (lection.name in LECTION_LINKS) {
-      openButton = <button class="btn tooltip tooltip-left" data-tooltip={`Atvērt ${lection.name} e-studijās`}><i class="icon icon-link"></i></button>;
-      openButton.addEventListener("click", () => window.location.assign(LECTION_LINKS[lection.name as keyof typeof LECTION_LINKS]));
+      linkButton = <button class="btn tooltip tooltip-left hide-xl" data-tooltip={`Atvērt ${lection.name} e-studijās`}><i class="icon icon-link"></i></button>;
+      linkButton.addEventListener("click", () => window.location.assign(LECTION_LINKS[lection.name as keyof typeof LECTION_LINKS]));
     }
+
+    const modalButton = <button class="btn show-xl"><i class="icon icon-more-vert"></i></button>;
+    modalButton.addEventListener("click", () => {
+      const modal = createLectionModal(lection);
+      document.body.appendChild(modal);
+    });
 
     let { room, prof } = getRoomAndProf(getLectionKey(lection)) ?? { room: null, prof: null };
 
@@ -155,16 +168,21 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
     
     return [
       <>
-        { LECTION_NAMES[lection.name as keyof typeof LECTION_NAMES] }
+        <div>
+          <span class="hide-lg">{ LECTION_NAMES[lection.name as keyof typeof LECTION_NAMES] }</span>
+          <span class="show-lg">{ LECTION_NAMES_SHORT[lection.name as keyof typeof LECTION_NAMES_SHORT] }</span>
+        </div>
         {
           lection.name === "DatZB067L" ?
-            <InfoTooltip position="right">Kurss sākas tikai ar 4. nedēļu</InfoTooltip> :
+            <span class="text-error hide-lg">Kurss sākas tikai ar 4. nedēļu<br /></span> :
             <></>
         }
-        <br />
-        <span class="text-gray">{prof ?? "Pasniedzējs netika atrasts"}</span>
+        <span class="text-gray hide-xl">{prof ?? "Pasniedzējs netika atrasts"}</span>
       </>,
-      DAY_LOCALE[lection.day as keyof typeof DAY_LOCALE],
+      <>
+        <span class="hide-lg">{DAY_LOCALE[lection.day as keyof typeof DAY_LOCALE]}</span>
+        <span class="show-lg">{DAY_LOCALE_SHORT[lection.day as keyof typeof DAY_LOCALE_SHORT]}</span>
+      </>,
       lection.weekFilter === "even" ? "Pāra nedēļās" :
         lection.weekFilter === "odd" ? "Nepāra nedēļās" :
           Array.isArray(lection.weekFilter) ? `Nedēļās ${lection.weekFilter.join(", ")}` :
@@ -172,11 +190,18 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
       TIME_TO_RANGE[lection.time as keyof typeof TIME_TO_RANGE],
       room,
       lection.group ?? "",
-      openButton,
+      <>
+        {linkButton}
+        {modalButton}
+      </>,
     ];
   });
 
-  const tableElement = createTable(["Kurss", "Diena", "", "Laiks", "Telpa", "Grupa", ""], lections);
+  const tableElement = createTable(
+    ["Kurss", "Diena", "", "Laiks", "Telpa", "Grupa", ""],
+    lections,
+    ["", "", "hide-xl", "", "hide-xl", "hide-xl", ""]
+  );
 
   const closeButton = <button class="btn float-right m-1">Aizvērt tabulu <i class="icon icon-cross"></i></button>;
 
@@ -191,9 +216,8 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
   const weekOrdinal = WEEK_ORDINALS[weekID as keyof typeof WEEK_ORDINALS];
 
   return <>
-    <p class="mb-1">Lekciju saraksts: { data.name }, { data.stream } plūsma</p>
+    <p class="mb-1">Šobrīd ir {weekOrdinal}. nedēļa, { weekOrdinal % 2 === 0 ? "pāra" : "nepāra" }</p>
     { onClose ? closeButton : <></> }
-    <p class="text-gray mb-1">Šobrīd ir {weekOrdinal}. nedēļa, { weekOrdinal % 2 === 0 ? "pāra" : "nepāra" }</p>
     { tableElement }
   </>;
 }

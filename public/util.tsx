@@ -9,18 +9,24 @@ export function localGetOrDefault(key: string, defaultValue: string): string {
   return current;
 }
 
-export function createTable(headers: (string | HTMLElement)[], entries: (string | HTMLElement)[][]): HTMLElement {
+export function createTable(headers: (string | HTMLElement)[], entries: (string | HTMLElement)[][], columnClasses?: (string | undefined)[]): HTMLElement {
+  if (typeof columnClasses === "undefined") {
+    columnClasses = Array(headers.length).fill(undefined);
+  }
+  
   const headerRow = <tr></tr>;
-  for (const header of headers) {
-    headerRow.appendChild(<th>{ header }</th>);
+  for (let i = 0; i < headers.length; i++) {
+    const header = headers[i];
+    headerRow.appendChild(<th class={columnClasses[i] ?? ""}>{ header }</th>);
   }
 
   const tableBody = <tbody></tbody>;
 
   for (const row of entries) {
     const rowElement = <tr></tr>;
-    for (const cell of row) {
-      rowElement.appendChild(<td>{ cell }</td>);
+    for (let i = 0; i < row.length; i++) {
+      const cell = row[i];
+      rowElement.appendChild(<td class={columnClasses[i] ?? ""}>{ cell }</td>);
     }
     tableBody.appendChild(rowElement);
   }

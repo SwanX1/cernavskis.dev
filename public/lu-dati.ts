@@ -54,6 +54,22 @@ export const DAY_LOCALE = {
   "Pk": "Piektdiena"
 };
 
+export const DAY_LOCALE_LOCATIVE = {
+  "Pr": "Pirmdienās",
+  "O": "Otrdienās",
+  "T": "Trešdienās",
+  "C": "Ceturtdienās",
+  "Pk": "Piektdienās"
+};
+
+export const DAY_LOCALE_SHORT = {
+  "Pr": "Pr.",
+  "O": "O.",
+  "T": "Tr.",
+  "C": "Ce.",
+  "Pk": "Pk."
+};
+
 export const TIME_TO_RANGE = {
   "8:30": "08:30 - 10:10",
   "10:30": "10:30 - 12:10",
@@ -78,18 +94,33 @@ export const LECTION_NAMES = {
   "DatZB067L": "Datoru tīkli I un ieskats nozarē (laboratorijas darbs)",
 };
 
+export const LECTION_NAMES_SHORT = {
+  "DatZB001": "Tīmekļa tehn.",
+  "DatZB001L": "Tīmekļa tehn. (lab.)",
+  "DatZB009": "Alg. un prog.",
+  "DatZB009L": "Alg. un prog. (lab.)",
+  "DatZB009P": "Alg. un prog. (prak.)",
+  "DatZB010": "Diskrētā mat.",
+  "DatZB010I": "Izl. kurss mat.",
+  "DatZB018": "Operētājsist.",
+  "DatZB066": "Datorsist. un inž. pamati",
+  "DatZB067": "Datoru tīkli",
+  "DatZB067L": "Datoru tīkli (lab.)",
+};
+
+const LECTION_BASE_LINK = "https://estudijas.lu.lv/course/view.php?id=";
 export const LECTION_LINKS = {
-  "DatZB001": "https://estudijas.lu.lv/course/view.php?id=17251",
-  "DatZB001L": "https://estudijas.lu.lv/course/view.php?id=17251",
-  "DatZB009": "https://estudijas.lu.lv/course/view.php?id=17253",
-  "DatZB009L": "https://estudijas.lu.lv/course/view.php?id=17253",
-  "DatZB009P": "https://estudijas.lu.lv/course/view.php?id=17253",
-  "DatZB010": "https://estudijas.lu.lv/course/view.php?id=17071",
-  "DatZB010I": "https://estudijas.lu.lv/course/view.php?id=17071",
-  "DatZB018": "https://estudijas.lu.lv/course/view.php?id=17073",
-  "DatZB066": "https://estudijas.lu.lv/course/view.php?id=17038",
-  "DatZB067": "https://estudijas.lu.lv/course/view.php?id=17127",
-  "DatZB067L": "https://estudijas.lu.lv/course/view.php?id=17127",
+  "DatZB001": LECTION_BASE_LINK + 17251,
+  "DatZB001L": LECTION_BASE_LINK + 17251,
+  "DatZB009": LECTION_BASE_LINK + 17253,
+  "DatZB009L": LECTION_BASE_LINK + 17253,
+  "DatZB009P": LECTION_BASE_LINK + 17253,
+  "DatZB010": LECTION_BASE_LINK + 17071,
+  "DatZB010I": LECTION_BASE_LINK + 17071,
+  "DatZB018": LECTION_BASE_LINK + 17073,
+  "DatZB066": LECTION_BASE_LINK + 17038,
+  "DatZB067": LECTION_BASE_LINK + 17127,
+  "DatZB067L": LECTION_BASE_LINK + 17127,
 };
 
 export const PROFS = [

@@ -10,7 +10,7 @@ const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" da
 const submit = <button class="btn btn-primary mx-1">Vienkāršot!</button>;
 const remember = <input type="checkbox"></input>;
 const tableContainer = <div></div> as HTMLDivElement;
-const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā. Jāuzspiež uz viņa, lai tiktu ievadīti (diezgan gari) dati par lekcijām.</p>;
+const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā.<br />Jāuzspiež uz viņa, lai vārds būtu precīzs,<br />jo bez tā nevar atrast datus.</p>;
 const error = <p class="form-input-hint" style="display: none;">Notika kļūda! Paziņojiet par to administratoram!</p>;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,13 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.localStorage.setItem("shouldRemember", String(remember.checked));
   });
 
-  if (remember.checked) {
-    input.value = localGetOrDefault("rememberedValue", "");
-  } else {
-    window.localStorage.removeItem("rememberedValue");
-  }
-
-  submit.addEventListener("click", () => {
+  async function showTable() {
     error.style.display = "none";
     input.classList.remove("is-error");
 
@@ -33,8 +27,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (remember.checked) {
         window.localStorage.setItem("rememberedValue", input.value);
       }
+
+      const dataLine = (await getPeople())[input.value];
+
+      if (!dataLine) {
+        throw new Error("No data found for name: " + input.value);
+      }
   
-      displayTable(tableContainer, parseLine(input.value), () => {
+      displayTable(tableContainer, parseLine(dataLine), () => {
         removeAllChildren(tableContainer);
         example.style.display = "block";
       });
@@ -44,7 +44,26 @@ document.addEventListener("DOMContentLoaded", () => {
       error.style.display = "block";
       input.classList.add("is-error");
     }
-  });
+  }
+
+  submit.addEventListener("click", showTable);
+
+  if (remember.checked) {
+    let cachedValue = localGetOrDefault("rememberedValue", "");
+    if (/^\d/.test(cachedValue)) {
+      cachedValue = cachedValue.slice(
+        cachedValue.indexOf(" "),
+        Math.max(
+          cachedValue.indexOf(" I "),
+          cachedValue.indexOf(" II "),
+        )
+      ).trim();
+    }
+    input.value = cachedValue;
+    showTable();
+  } else {
+    window.localStorage.removeItem("rememberedValue");
+  }
 
   document.body.appendChild(
     <div class="container p-2 s-rounded">
@@ -59,21 +78,20 @@ document.addEventListener("DOMContentLoaded", () => {
             </label>
           </div>
 
-
           <div class="form-group form-autocomplete">
             <label for="input-data" class="form-label">
-            Ierakstiet savu vārdu<span class="text-gray">, vai ievadiet savu grupas saraksta rindiņu:</span>
+            Ierakstiet savu vārdu:
             </label>
             <div class="form-autocomplete-input">
               { input }
               { error }
             </div>
-            { createAutocompleteMenu(getPeople(), input) }
-            { example }
+            { createAutocompleteMenu(getPeople().then(obj => Object.keys(obj)), input) }
             <div class="float-right">
               { exportButton }
               { submit }
             </div>
+            { example }
           </div>
 
           { tableContainer }
@@ -89,16 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 
-function createAutocompleteMenu(fetched: Promise<Record<string, string>>, input: HTMLInputElement): HTMLElement {
+function createAutocompleteMenu(data: Promise<string[]>, input: HTMLInputElement): HTMLElement {
   const ul = <ul class="menu p-absolute"></ul>;
   ul.style.display = "none";
 
   input.addEventListener("input", async () => {
-    const allStrings = await fetched;
     const value = input.value.toLowerCase().trim();
     removeAllChildren(ul);
 
-    const keys = Object.keys(allStrings);
+    const keys = await data;
     const filtered = keys.filter(str => str.toLowerCase().includes(value));
     const sorted = filtered.sort((a, b) => {
       const ai = a.toLowerCase().indexOf(value);
@@ -126,7 +143,7 @@ function createAutocompleteMenu(fetched: Promise<Record<string, string>>, input:
       ul.appendChild(li);
 
       li.addEventListener("click", () => {
-        input.value = allStrings[str];
+        input.value = str;
         ul.style.display = "none";
       });
     });
