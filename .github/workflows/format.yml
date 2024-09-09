@@ -22,17 +22,31 @@ jobs:
       - name: Run Prettier
         run: bun run format
 
-      - name: Create commit
-        uses: qoomon/actions--create-commit@v1
-        id: commit
-        with:
-          message: |
-            chore: format code
-            This commit was created by the format workflow.
+      - name: Create commit and push
+        run: |
+          git add . -v
+
+          if [ ! -z "$(git diff --exit-code --staged)" ]; then
+            commit=`
+              curl \
+                -s \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA"
+            `
+
+            echo "$commit" | jq ".commit.author.name" | xargs git config user.name
+            echo "$commit" | jq ".commit.author.email" | xargs git config user.email
+
+            git add . --verbose
+            git commit --verbose -m "
+            chore: auto-format
+                      
+            This is an automated commit. It is made by a GitHub workflow.
             Action: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+            "
 
-          skip-empty: true
-
-      - name: Push changes
-        if: ${{ steps.commit.outputs.commit != null }}
-        run: git push
+            git push --verbose
+          else
+            echo "No changes to commit"
+            exit 0
+          fi
