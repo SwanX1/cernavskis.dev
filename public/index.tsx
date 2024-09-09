@@ -1,5 +1,5 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
-import { MailTo } from "./mailto";
+import { MailTo } from "./components/MailTo";
 
 document.addEventListener("DOMContentLoaded", () => {
   const loadingTextElement = <p class="text-center"></p>;

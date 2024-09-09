@@ -1,4 +1,4 @@
-let cachedPeople: Promise<Record<string, string>> = fetch("/tools/lu-dati/PEOPLE.json").then((response) => response.json());
+let cachedPeople: Promise<Record<string, string>> = fetch("/lulsv/data/PEOPLE.json").then((response) => response.json());
 export async function getPeople(): Promise<Record<string, string>> {
   return await cachedPeople;
 }

@@ -1,5 +1,5 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
-import { createTable, removeAllChildren } from "./util";
+import { createTable, removeAllChildren } from "../util";
 import { DAY_LOCALE, DAY_LOCALE_SHORT, LECTION_LINKS, LECTION_NAMES, LECTION_NAMES_SHORT, LECTION_ROOMS_PROFS, PROFS, ROOMS, TIME_TO_RANGE, WEEK_ORDINALS } from "./lu-dati";
 import { createLectionModal } from "./LectionInfoModal";
 
