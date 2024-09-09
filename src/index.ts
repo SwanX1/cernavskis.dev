@@ -11,7 +11,9 @@ applyConfiguration(app);
 app.use(compression({ level: 9 }));
 app.get("/tools/lu-saraksts", (_req, res) => res.redirect(301, "/lulsv"));
 
-const LULSV_PEOPLE: Record<string, string> = await Bun.file(new URL("./data/lulsv_people.json", import.meta.url).pathname).json();
+const LULSV_PEOPLE: Record<string, string> = await Bun.file(
+  new URL("./data/lulsv_people.json", import.meta.url).pathname
+).json();
 const LULSV_PEOPLE_KEYS = Object.keys(LULSV_PEOPLE);
 
 app.get("/lulsv/data/all", (_req, res) => {

@@ -6,15 +6,15 @@ export async function getPeople(): Promise<string[]> {
 let cachedPeople: Record<string, Promise<string | null>> = {};
 export async function getPerson(name: string): Promise<string | null> {
   if (!(name in cachedPeople)) {
-    cachedPeople[name] = new Promise<string | null>(r => 
+    cachedPeople[name] = new Promise<string | null>(r =>
       fetch(`/lulsv/data/${name}`)
-        .then(response => response.status === 200 ? response.text() : null)
+        .then(response => (response.status === 200 ? response.text() : null))
         .then(r)
         .catch(e => {
           console.error(e);
           r(null);
         })
-      );
+    );
   }
 
   return await cachedPeople[name];
