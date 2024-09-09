@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     calendar.setSelectedRange(calendarWeekStart, calendarWeekEnd);
-    showTable();
 
     calendar.element.style.display = "none";
 
@@ -78,9 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
   calendar.onClick((date, event) => {
     rangeStart = date.date;
     showRange();
+    showTable();
   });
 
-  calendar.onChange(showRange);
+  calendar.onChange(() => {
+    showRange();
+    calendar.element.style.display = "block";
+  });
 
   async function showTable() {
     error.style.display = "none";
