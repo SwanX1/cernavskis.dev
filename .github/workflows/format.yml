@@ -27,15 +27,8 @@ jobs:
           git add . -v
 
           if [ ! -z "$(git diff --exit-code --staged)" ]; then
-            commit=`
-              curl \
-                -s \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                "https://api.github.com/repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA"
-            `
-
-            echo "$commit" | jq ".commit.author.name" | xargs git config user.name
-            echo "$commit" | jq ".commit.author.email" | xargs git config user.email
+            git config user.name github-actions
+            git config user.email github-actions@github.com
 
             git add . --verbose
             git commit --verbose -m "
