@@ -1,0 +1,38 @@
+name: Auto-format
+
+concurrency: production
+
+on: [push]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --verbose --frozen-lockfile
+
+      - name: Run Prettier
+        run: bun run format
+
+      - name: Create commit
+        uses: qoomon/actions--create-commit@v1
+        id: commit
+        with:
+          message: |
+            chore: format code
+            This commit was created by the format workflow.
+            Action: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID
+
+          skip-empty: true
+
+      - name: Push changes
+        if: ${{ steps.commit.outputs.commit != null }}
+        run: git push

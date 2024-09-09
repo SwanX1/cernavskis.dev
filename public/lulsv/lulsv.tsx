@@ -1,17 +1,40 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
+import { localGetOrDefault, removeAllChildren } from "../util";
 import { getPeople } from "./lu-dati";
 import { displayTable, parseLine } from "./table-gen";
-import { localGetOrDefault, removeAllChildren } from "../util";
 
 performSanityCheck();
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
-  const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
-  const submit = <button class="btn btn-primary input-group-btn mr-1" on:click={showTable}>Vienkāršot!</button>;
-  const tableContainer = <div></div> as HTMLDivElement;
-  const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā.<br />Jāuzspiež uz viņa, lai vārds būtu precīzs,<br />jo bez tā nevar atrast datus.</p>;
-  const error = <p class="form-input-hint" style="display: none;">Notika kļūda! Paziņojiet par to administratoram!</p>;
+  const exportButton = (
+    <button
+      class="btn disabled tooltip tooltip-bottom mx-1"
+      data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}
+    >
+      <i class="icon icon-share"></i> Exportēt ICS
+    </button>
+  );
+  const submit = (
+    <button class="btn btn-primary input-group-btn mr-1" on:click={showTable}>
+      Vienkāršot!
+    </button>
+  );
+  const tableContainer = (<div></div>) as HTMLDivElement;
+  const example = (
+    <p class="form-input-hint">
+      Ierakstot vārdu, tas parādīsies sarakstā.
+      <br />
+      Jāuzspiež uz viņa, lai vārds būtu precīzs,
+      <br />
+      jo bez tā nevar atrast datus.
+    </p>
+  );
+  const error = (
+    <p class="form-input-hint" style="display: none;">
+      Notika kļūda! Paziņojiet par to administratoram!
+    </p>
+  );
 
   async function showTable() {
     error.style.display = "none";
@@ -25,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!dataLine) {
         throw new Error("No data found for name: " + input.value);
       }
-  
+
       displayTable(tableContainer, parseLine(dataLine), () => {
         removeAllChildren(tableContainer);
         example.style.display = "block";
@@ -38,16 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  { // Backwards compat
+  {
+    // Backwards compat
     let cachedValue = localGetOrDefault("rememberedValue", "");
     if (/^\d/.test(cachedValue)) {
-      cachedValue = cachedValue.slice(
-        cachedValue.indexOf(" "),
-        Math.max(
-          cachedValue.indexOf(" I "),
-          cachedValue.indexOf(" II "),
-        )
-      ).trim();
+      cachedValue = cachedValue
+        .slice(cachedValue.indexOf(" "), Math.max(cachedValue.indexOf(" I "), cachedValue.indexOf(" II ")))
+        .trim();
     }
     input.value = cachedValue;
   }
@@ -63,23 +83,26 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="form-group form-autocomplete">
             <div class="form-autocomplete-input">
               <div class="input-group">
-                { input }
-                { submit }
+                {input}
+                {submit}
               </div>
-              { error }
+              {error}
             </div>
-            { createAutocompleteMenu(getPeople().then(obj => Object.keys(obj)), input) }
-            <div class="float-right">
-              { exportButton }
-            </div>
-            { example }
+            {createAutocompleteMenu(
+              getPeople().then(obj => Object.keys(obj)),
+              input
+            )}
+            <div class="float-right">{exportButton}</div>
+            {example}
           </div>
 
-          { tableContainer }
+          {tableContainer}
 
           <footer class="text-center text-gray mt-18">
-            Izmantoti tikai publiski resursi no LUDF mājaslapas.<br />
-            Autortiesības aizsargātas. &copy; Kārlis Čerņavskis, {new Date().getFullYear()}<br />
+            Izmantoti tikai publiski resursi no LUDF mājaslapas.
+            <br />
+            Autortiesības aizsargātas. &copy; Kārlis Čerņavskis, {new Date().getFullYear()}
+            <br />
             Šī vietne izmanto sīkdatnes tikai tās funkcionalitātei, tās nav konfigurējamas.
           </footer>
         </div>
@@ -98,33 +121,40 @@ function createAutocompleteMenu(data: Promise<string[]>, input: HTMLInputElement
 
     const keys = await data;
     const filtered = keys.filter(str => str.toLowerCase().includes(value));
-    const sorted = filtered.sort((a, b) => {
-      const ai = a.toLowerCase().indexOf(value);
-      const bi = b.toLowerCase().indexOf(value);
+    const sorted = filtered
+      .sort((a, b) => {
+        const ai = a.toLowerCase().indexOf(value);
+        const bi = b.toLowerCase().indexOf(value);
 
-      if (ai !== bi) {
-        return ai - bi;
-      }
+        if (ai !== bi) {
+          return ai - bi;
+        }
 
-      return a.localeCompare(b);
-    }).slice(0, 5);
+        return a.localeCompare(b);
+      })
+      .slice(0, 5);
 
     if (sorted.length === 0 || value.length === 0) {
       ul.style.display = "none";
       return;
     }
-    
+
     sorted.forEach(str => {
-      const li = <li class="menu-item" on:click={() => {
-        input.value = str;
-        ul.style.display = "none";
-      }}>
-        <a href="#">
-          <div class="tile tile-centered">
-            <div class="tile-content">{ str }</div>
-          </div>
-        </a>
-      </li>;
+      const li = (
+        <li
+          class="menu-item"
+          on:click={() => {
+            input.value = str;
+            ul.style.display = "none";
+          }}
+        >
+          <a href="#">
+            <div class="tile tile-centered">
+              <div class="tile-content">{str}</div>
+            </div>
+          </a>
+        </li>
+      );
 
       ul.appendChild(li);
     });
@@ -138,7 +168,7 @@ function createAutocompleteMenu(data: Promise<string[]>, input: HTMLInputElement
     }
   });
 
-  window.addEventListener("click", (e) => {
+  window.addEventListener("click", e => {
     if (!ul.contains(e.target as Node) && e.target !== input) {
       ul.style.display = "none";
     }

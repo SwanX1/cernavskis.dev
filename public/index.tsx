@@ -85,16 +85,14 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="columns">
         <div class="col-6 col-md-8 col-sm-12 col-mx-auto bg-gray round-edges p-2">
           <h1 class="m-2">cernavskis.dev</h1>
-
           <div class="p-2 col-8 col-mx-auto">
             <div class="divider m-6"></div>
 
-            { loadingTextElement }
+            {loadingTextElement}
             <div class="loading loading-lg"></div>
 
             <div class="divider m-6"></div>
           </div>
-
           See what I'm doing on: <a href="https://github.com/SwanX1">GitHub</a>
           <p>
             Contact me at: <i class="icon icon-mail mr-1"></i>

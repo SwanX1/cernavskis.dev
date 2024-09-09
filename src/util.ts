@@ -40,8 +40,9 @@ export function applyConfiguration(app: Express): void {
       const elapsed = process.hrtime(startedAt);
       const elapsedMs = elapsed[0] * 1e3 + elapsed[1] / 1e6;
       logger.debug(
-        chalk`\t${(req.ip ?? "unknown ip").padEnd(15, " ")} - ${req.method.padEnd(4, " ")} ${req.originalUrl
-          } {${color} ${res.statusCode}} ${elapsedMs.toFixed(3)}ms`
+        chalk`\t${(req.ip ?? "unknown ip").padEnd(15, " ")} - ${req.method.padEnd(4, " ")} ${
+          req.originalUrl
+        } {${color} ${res.statusCode}} ${elapsedMs.toFixed(3)}ms`
       );
     });
 
@@ -55,12 +56,8 @@ export function applyConfiguration(app: Express): void {
         directives: {
           "default-src": ["*"],
           "img-src": ["*"],
-          "script-src": [
-            "'self'",
-            "'unsafe-inline'",
-            "'unsafe-eval'"
-          ],
-          'script-src-attr': ["'unsafe-inline'"],
+          "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+          "script-src-attr": ["'unsafe-inline'"],
         },
       },
       crossOriginEmbedderPolicy: false,
@@ -86,7 +83,7 @@ const defaultLogger = new Logger({
       level: Bun.env.VERBOSE === "true" ? "DEBUG" : "INFO",
       stream: process.stdout,
       prefix: util.coloredLog,
-    }
+    },
   ],
 });
 

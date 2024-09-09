@@ -9,27 +9,25 @@ export function localGetOrDefault(key: string, defaultValue: string): string {
   return current;
 }
 
-export function createTable(headers: (string | HTMLElement)[], entries: (string | HTMLElement)[][], columnClasses?: (string | undefined)[]): HTMLElement {
+export function createTable(
+  headers: (string | HTMLElement)[],
+  entries: (string | HTMLElement)[][],
+  columnClasses?: (string | undefined)[]
+): HTMLElement {
   if (typeof columnClasses === "undefined") {
     columnClasses = Array(headers.length).fill(undefined);
   }
-  
-  return <table class="table">
-    <thead>
-      <tr>
-        { ...headers.map((header, i) => <th class={columnClasses[i] ?? ""}>{ header }</th>) }
-      </tr>
-    </thead>
-    <tbody>
-      {
-        ...entries.map((row, i) =>
-          <tr>
-            { ...row.map((cell, i) => <td class={columnClasses[i] ?? ""}>{ cell }</td>) }
-          </tr>
-        )
-      }
-    </tbody>
-  </table>;
+
+  return (
+    <table class="table">
+      <thead>
+        <tr>{...headers.map((header, i) => <th class={columnClasses[i] ?? ""}>{header}</th>)}</tr>
+      </thead>
+      <tbody>
+        {...entries.map((row, i) => <tr>{...row.map((cell, i) => <td class={columnClasses[i] ?? ""}>{cell}</td>)}</tr>)}
+      </tbody>
+    </table>
+  );
 }
 
 export function removeAllChildren(element: Node): void {

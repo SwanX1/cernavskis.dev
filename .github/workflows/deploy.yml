@@ -34,4 +34,3 @@ jobs:
           -o "StrictHostKeyChecking=accept-new" \
           ${{ secrets.SSH_HOST }} \
           "bash --login -e ~/deploy.sh; rm ~/deploy.sh"
-
