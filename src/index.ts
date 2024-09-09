@@ -9,6 +9,7 @@ const logger = getLogger();
 applyConfiguration(app);
 
 app.use(compression({ level: 9 }));
+app.get("/tools/lu-saraksts", (_req, res) => res.redirect(301, "/lulsv"));
 app.use(express.static(new URL("../dist", import.meta.url).pathname, {
   extensions: ["html"],
 }));
