@@ -21,7 +21,7 @@ export function createLectionModal(lection: Lection): HTMLElement {
   }
 
   const modal: HTMLElement = (
-    <div class="modal active">
+    <div class="modal active mw-100">
       <div class="modal-overlay"></div>
       <div class="modal-container">
         <div class="modal-header">

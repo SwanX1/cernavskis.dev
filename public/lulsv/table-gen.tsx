@@ -30,9 +30,9 @@ export interface Lection {
   weekFilter?: "even" | "odd" | number[];
 }
 
-export function displayTable(container: HTMLElement, data: PersonData, onClose?: () => void): void {
+export function displayTable(container: HTMLElement, data: PersonData, lectionFilter?: (lection: Lection) => boolean): void {
   removeAllChildren(container);
-  container.appendChild(<div>{createDataTable(data, onClose)}</div>);
+  container.appendChild(<div>{createDataTable(data, lectionFilter)}</div>);
 }
 
 export function parseLine(line: string): PersonData {
@@ -127,8 +127,9 @@ export function parseLine(line: string): PersonData {
   return personData;
 }
 
-export function createDataTable(data: PersonData, onClose?: () => void): HTMLElement {
+export function createDataTable(data: PersonData, lectionFilter?: (lection: Lection) => boolean): HTMLElement {
   const lections: string[][] = data.lections
+    .filter(lection => lectionFilter ? lectionFilter(lection) : true)
     .sort((a, b) => {
       if (a.day !== b.day) {
         const ad = ["Pr", "O", "T", "C", "Pk"].findIndex(day => day === a.day);
@@ -231,28 +232,7 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
     "",
   ]);
 
-  const closeButton = (
-    <button class="btn float-right m-1" on:click={onClose}>
-      Aizvērt tabulu <i class="icon icon-cross"></i>
-    </button>
-  );
-
-  const startOfWeek = new Date();
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1);
-  startOfWeek.setHours(0, 0, 0, 0);
-
-  const weekID = `${startOfWeek.getFullYear()}${(startOfWeek.getMonth() + 1).toString().padStart(2, "0")}${startOfWeek.getDate().toString().padStart(2, "0")}`;
-  const weekOrdinal = WEEK_ORDINALS[weekID as keyof typeof WEEK_ORDINALS];
-
-  return (
-    <>
-      <p class="mb-1">
-        Šobrīd ir {weekOrdinal}. nedēļa, {weekOrdinal % 2 === 0 ? "pāra" : "nepāra"}
-      </p>
-      {onClose ? closeButton : <></>}
-      {tableElement}
-    </>
-  );
+  return tableElement;
 }
 
 export function getLectionKey(lection: Lection): string {

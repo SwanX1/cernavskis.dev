@@ -1,7 +1,8 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
 import { localGetOrDefault, removeAllChildren } from "../util";
-import { getPeople, getPerson } from "./lu-dati";
-import { displayTable, parseLine } from "./table-gen";
+import { getPeople, getPerson, MONTH_LOCALE_SHORT, WEEK_ORDINALS } from "./lu-dati";
+import { displayTable, parseLine, type Lection } from "./table-gen";
+import { Calendar, getWeek } from "../components/Calendar";
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
@@ -34,6 +35,53 @@ document.addEventListener("DOMContentLoaded", () => {
     </p>
   );
 
+  const calendar = new Calendar(new Date());
+  calendar.element.style.display = "none";
+
+  const viewWeekButtonText = <span>Filtrēt nedēļu</span>;
+
+  const viewWeekButton = <div class="float-left">
+    {calendar.element}
+    <button class="btn mr-2" on:click={() => calendar.element.style.display = "block"}><i class="icon icon-time"></i>&nbsp;{viewWeekButtonText}</button>
+  </div>;
+
+  window.addEventListener("click", e => {
+    if (!(viewWeekButton.contains(e.target as Node) || calendar.element.contains(e.target as Node))) {
+      calendar.element.style.display = "none";
+    }
+  });
+
+  calendar.onFocus(date => date.element.querySelector("button")!.blur());
+
+  let rangeStart: Date | null = null;
+  function showRange(): void {
+    if (rangeStart === null) return;
+    const weekStart = getWeek(rangeStart);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+
+    const calendarWeekStart = calendar.getCalendarDate(weekStart);
+    const calendarWeekEnd = calendar.getCalendarDate(weekEnd);
+
+    if (calendarWeekStart === null || calendarWeekEnd === null) {
+      return;
+    }
+
+    calendar.setSelectedRange(calendarWeekStart, calendarWeekEnd);
+    showTable();
+
+    calendar.element.style.display = "none";
+
+    viewWeekButtonText.textContent = `${weekStart.getDate()}. ${MONTH_LOCALE_SHORT[weekStart.getMonth()]} - ${weekEnd.getDate()}. ${MONTH_LOCALE_SHORT[weekEnd.getMonth()]}`;
+  }
+
+  calendar.onClick((date, event) => {
+    rangeStart = date.date;
+    showRange();
+  });
+
+  calendar.onChange(showRange);
+
   async function showTable() {
     error.style.display = "none";
     input.classList.remove("is-error");
@@ -47,9 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("No data found for name: " + input.value);
       }
 
-      displayTable(tableContainer, parseLine(dataLine), () => {
-        removeAllChildren(tableContainer);
-        example.style.display = "block";
+      console.log({ rangeStart });
+
+      displayTable(tableContainer, parseLine(dataLine), (lection) => {
+        if (rangeStart === null) {
+          return true;
+        }
+        return isLectionInWeek(rangeStart, lection);
       });
       example.style.display = "none";
     } catch (e) {
@@ -87,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
               {error}
             </div>
             {createAutocompleteMenu(getPeople(), input)}
+            {viewWeekButton}
             <div class="float-right">{exportButton}</div>
             {example}
           </div>
@@ -188,6 +241,40 @@ async function performSanityCheck(): Promise<void> {
       console.error("Failed sanity check for name:", name);
     }
   }
+}
+
+function isLectionInWeek(week: Date, lection: Lection): boolean {
+  if (typeof lection.weekFilter === "undefined") {
+    return true;
+  }
+
+  week = getWeek(week);
+
+  const weekKey = `${week.getFullYear()}${(week.getMonth() + 1).toString().padStart(2, "0")}${week.getDate().toString().padStart(2, "0")}` as keyof typeof WEEK_ORDINALS;
+
+  const weekOrdinal = WEEK_ORDINALS[weekKey];
+
+  if (!weekOrdinal) {
+    console.error("Failed to get week ordinal for date:", weekKey);
+    return false;
+  }
+
+  if (lection.weekFilter === "even") {
+    console.log("Lection is even", weekOrdinal);
+    return weekOrdinal % 2 === 0;
+  }
+
+  if (lection.weekFilter === "odd") {
+    console.log("Lection is odd", weekOrdinal);
+    return weekOrdinal % 2 === 1;
+  }
+
+  if (Array.isArray(lection.weekFilter)) {
+    console.log("Lection is array", weekOrdinal);
+    return lection.weekFilter.includes(weekOrdinal);
+  }
+
+  return true;
 }
 
 // @ts-expect-error i cba to make a global declaration

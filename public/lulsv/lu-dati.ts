@@ -87,6 +87,21 @@ export const DAY_LOCALE_SHORT = {
   Pk: "Pk.",
 };
 
+export const MONTH_LOCALE_SHORT = [
+  "jan.",
+  "feb.",
+  "mar.",
+  "apr.",
+  "mai.",
+  "jūn.",
+  "jūl.",
+  "aug.",
+  "sep.",
+  "okt.",
+  "nov.",
+  "dec.",
+];
+
 export const TIME_TO_RANGE = {
   "8:30": "08:30 - 10:10",
   "10:30": "10:30 - 12:10",
