@@ -47,7 +47,7 @@ cd $SERVICE_PATH
 git config advice.detachedHead false
 git fetch origin -v
 git checkout origin/main
-git clean -fdx
+git clean -fdxe .env
 
 # Install the dependencies
 bun install --verbose --production
