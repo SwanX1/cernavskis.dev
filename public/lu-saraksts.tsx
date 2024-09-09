@@ -7,26 +7,18 @@ performSanityCheck();
 
 const input = <input type="text" class="form-input" id="input-data"></input>;
 const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
-const submit = <button class="btn btn-primary mx-1">Vienkāršot!</button>;
-const remember = <input type="checkbox"></input>;
+const submit = <button class="btn btn-primary input-group-btn mr-1">Vienkāršot!</button>;
 const tableContainer = <div></div> as HTMLDivElement;
 const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā.<br />Jāuzspiež uz viņa, lai vārds būtu precīzs,<br />jo bez tā nevar atrast datus.</p>;
 const error = <p class="form-input-hint" style="display: none;">Notika kļūda! Paziņojiet par to administratoram!</p>;
 
 document.addEventListener("DOMContentLoaded", () => {
-  remember.checked = localGetOrDefault("shouldRemember", "false") === "true" ? true : false;
-  remember.addEventListener("change", () => {
-    window.localStorage.setItem("shouldRemember", String(remember.checked));
-  });
-
   async function showTable() {
     error.style.display = "none";
     input.classList.remove("is-error");
 
     try {
-      if (remember.checked) {
-        window.localStorage.setItem("rememberedValue", input.value);
-      }
+      window.localStorage.setItem("rememberedValue", input.value);
 
       const dataLine = (await getPeople())[input.value];
 
@@ -48,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   submit.addEventListener("click", showTable);
 
-  if (remember.checked) {
+  { // Backwards compat
     let cachedValue = localGetOrDefault("rememberedValue", "");
     if (/^\d/.test(cachedValue)) {
       cachedValue = cachedValue.slice(
@@ -60,10 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ).trim();
     }
     input.value = cachedValue;
-    showTable();
-  } else {
-    window.localStorage.removeItem("rememberedValue");
   }
+
+  showTable();
 
   document.body.appendChild(
     <div class="container p-2 s-rounded">
@@ -71,25 +62,20 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="col-7 col-lg-8 col-md-9 col-sm-12 col-mx-auto bg-gray round-edges p-2">
           <h2 class="m-2 text-center">LU Lekciju saraksta vienkāršotājs</h2>
 
-          <div class="form-group float-right tooltip tooltip-bottom" data-tooltip="Pārlādējot šo lapu, ievadītais netiks dzēsts">
-            <label class="form-switch">
-              { remember }
-              <i class="form-icon"></i> Atcerēties mani
-            </label>
-          </div>
-
           <div class="form-group form-autocomplete">
-            <label for="input-data" class="form-label">
-            Ierakstiet savu vārdu:
-            </label>
             <div class="form-autocomplete-input">
-              { input }
+              <div class="input-group">
+                <label for="input-data" class="form-label input-group-addon">
+                Ierakstiet savu vārdu:
+                </label>
+                { input }
+                { submit }
+              </div>
               { error }
             </div>
             { createAutocompleteMenu(getPeople().then(obj => Object.keys(obj)), input) }
             <div class="float-right">
               { exportButton }
-              { submit }
             </div>
             { example }
           </div>
