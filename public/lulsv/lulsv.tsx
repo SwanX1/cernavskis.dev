@@ -1,8 +1,8 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
+import { Calendar, getWeek } from "../components/Calendar";
 import { localGetOrDefault, removeAllChildren } from "../util";
 import { getPeople, getPerson, MONTH_LOCALE_SHORT, WEEK_ORDINALS } from "./lu-dati";
 import { displayTable, parseLine, type Lection } from "./table-gen";
-import { Calendar, getWeek } from "../components/Calendar";
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
@@ -40,10 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const viewWeekButtonText = <span>Filtrēt nedēļu</span>;
 
-  const viewWeekButton = <div class="float-left">
-    {calendar.element}
-    <button class="btn mr-2" on:click={() => calendar.element.style.display = "block"}><i class="icon icon-time"></i>&nbsp;{viewWeekButtonText}</button>
-  </div>;
+  const viewWeekButton = (
+    <div class="float-left">
+      {calendar.element}
+      <button class="btn mr-2" on:click={() => (calendar.element.style.display = "block")}>
+        <i class="icon icon-time"></i>&nbsp;{viewWeekButtonText}
+      </button>
+    </div>
+  );
 
   window.addEventListener("click", e => {
     if (!(viewWeekButton.contains(e.target as Node) || calendar.element.contains(e.target as Node))) {
@@ -100,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log({ rangeStart });
 
-      displayTable(tableContainer, parseLine(dataLine), (lection) => {
+      displayTable(tableContainer, parseLine(dataLine), lection => {
         if (rangeStart === null) {
           return true;
         }
@@ -253,7 +257,8 @@ function isLectionInWeek(week: Date, lection: Lection): boolean {
 
   week = getWeek(week);
 
-  const weekKey = `${week.getFullYear()}${(week.getMonth() + 1).toString().padStart(2, "0")}${week.getDate().toString().padStart(2, "0")}` as keyof typeof WEEK_ORDINALS;
+  const weekKey =
+    `${week.getFullYear()}${(week.getMonth() + 1).toString().padStart(2, "0")}${week.getDate().toString().padStart(2, "0")}` as keyof typeof WEEK_ORDINALS;
 
   const weekOrdinal = WEEK_ORDINALS[weekKey];
 

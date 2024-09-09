@@ -11,7 +11,6 @@ import {
   PROFS,
   ROOMS,
   TIME_TO_RANGE,
-  WEEK_ORDINALS,
 } from "./lu-dati";
 
 export interface PersonData {
@@ -30,7 +29,11 @@ export interface Lection {
   weekFilter?: "even" | "odd" | number[];
 }
 
-export function displayTable(container: HTMLElement, data: PersonData, lectionFilter?: (lection: Lection) => boolean): void {
+export function displayTable(
+  container: HTMLElement,
+  data: PersonData,
+  lectionFilter?: (lection: Lection) => boolean
+): void {
   removeAllChildren(container);
   container.appendChild(<div>{createDataTable(data, lectionFilter)}</div>);
 }
@@ -129,7 +132,7 @@ export function parseLine(line: string): PersonData {
 
 export function createDataTable(data: PersonData, lectionFilter?: (lection: Lection) => boolean): HTMLElement {
   const lections: string[][] = data.lections
-    .filter(lection => lectionFilter ? lectionFilter(lection) : true)
+    .filter(lection => (lectionFilter ? lectionFilter(lection) : true))
     .sort((a, b) => {
       if (a.day !== b.day) {
         const ad = ["Pr", "O", "T", "C", "Pk"].findIndex(day => day === a.day);

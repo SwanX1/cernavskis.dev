@@ -41,9 +41,11 @@ export function isPrevMonth(date: Date, month: Date): boolean {
 }
 
 export function isSameDay(date1: Date, date2: Date): boolean {
-  return date1.getFullYear() === date2.getFullYear() &&
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
-    date1.getDate() === date2.getDate();
+    date1.getDate() === date2.getDate()
+  );
 }
 
 export function getWeekDays(date: Date): Date[] {
@@ -60,8 +62,8 @@ export function getWeekDays(date: Date): Date[] {
 }
 
 function createCalendarDateEventTarget(): {
-  addEventListener: (eventName: string, listener: (e: CalendarDateEvent) => void) => void,
-  dispatchEvent: (eventName: string, event: CalendarDateEvent) => void
+  addEventListener: (eventName: string, listener: (e: CalendarDateEvent) => void) => void;
+  dispatchEvent: (eventName: string, event: CalendarDateEvent) => void;
 } {
   const listeners: Record<string, ((e: CalendarDateEvent) => void)[]> = {};
 
@@ -90,10 +92,22 @@ export class CalendarDate {
     public readonly element: HTMLElement,
     public readonly eventTarget = createCalendarDateEventTarget()
   ) {
-    element.addEventListener("click", e => { (e as CalendarDateEvent).calendarDate = this; this.eventTarget.dispatchEvent("click", e as CalendarDateEvent) });
-    element.children[0].addEventListener("focus", e => { (e as CalendarDateEvent).calendarDate = this; this.eventTarget.dispatchEvent("focus", e as CalendarDateEvent) });
-    element.addEventListener("mouseenter", e => { (e as CalendarDateEvent).calendarDate = this; this.eventTarget.dispatchEvent("mouseenter", e as CalendarDateEvent) });
-    element.addEventListener("mouseleave", e => { (e as CalendarDateEvent).calendarDate = this; this.eventTarget.dispatchEvent("mouseleave", e as CalendarDateEvent) });
+    element.addEventListener("click", e => {
+      (e as CalendarDateEvent).calendarDate = this;
+      this.eventTarget.dispatchEvent("click", e as CalendarDateEvent);
+    });
+    element.children[0].addEventListener("focus", e => {
+      (e as CalendarDateEvent).calendarDate = this;
+      this.eventTarget.dispatchEvent("focus", e as CalendarDateEvent);
+    });
+    element.addEventListener("mouseenter", e => {
+      (e as CalendarDateEvent).calendarDate = this;
+      this.eventTarget.dispatchEvent("mouseenter", e as CalendarDateEvent);
+    });
+    element.addEventListener("mouseleave", e => {
+      (e as CalendarDateEvent).calendarDate = this;
+      this.eventTarget.dispatchEvent("mouseleave", e as CalendarDateEvent);
+    });
   }
 }
 
@@ -104,46 +118,54 @@ export class Calendar {
   private selectedRange: [CalendarDate, CalendarDate] | null = null;
   private displayedDateItems: CalendarDate[] = [];
   private eventTarget = createCalendarDateEventTarget();
-  
+
   public constructor(private currentMonth: Date) {
     this.calendarBody = <div class="calendar-body"></div>;
     this.calendarHeader = <div class="navbar-primary"></div>;
 
-    this.element = <div class="calendar p-absolute bg-light" style="z-index: 1;">
-      <div class="calendar-nav navbar">
-        <button class="btn btn-action btn-link btn-lg" on:click={() => {
-          const newDate = new Date(this.currentMonth);
-          newDate.setMonth(newDate.getMonth() - 1);
-          this.setCurrentMonth(newDate);
-        }}>
-          <i class="icon icon-arrow-left"></i>
-        </button>
-        {this.calendarHeader}
-        <button class="btn btn-action btn-link btn-lg" on:click={() => {
-          const newDate = new Date(this.currentMonth);
-          newDate.setMonth(newDate.getMonth() + 1);
-          this.setCurrentMonth(newDate);
-        }}>
-          <i class="icon icon-arrow-right"></i>
-        </button>
-      </div>
-      
-      <div class="calendar-container">
-        <div class="calendar-header">
-          <div class="calendar-date">Pr</div>
-          <div class="calendar-date">O</div>
-          <div class="calendar-date">Tr</div>
-          <div class="calendar-date">Ce</div>
-          <div class="calendar-date">Pk</div>
-          <div class="calendar-date">Se</div>
-          <div class="calendar-date">Sv</div>
+    this.element = (
+      <div class="calendar p-absolute bg-light" style="z-index: 1;">
+        <div class="calendar-nav navbar">
+          <button
+            class="btn btn-action btn-link btn-lg"
+            on:click={() => {
+              const newDate = new Date(this.currentMonth);
+              newDate.setMonth(newDate.getMonth() - 1);
+              this.setCurrentMonth(newDate);
+            }}
+          >
+            <i class="icon icon-arrow-left"></i>
+          </button>
+          {this.calendarHeader}
+          <button
+            class="btn btn-action btn-link btn-lg"
+            on:click={() => {
+              const newDate = new Date(this.currentMonth);
+              newDate.setMonth(newDate.getMonth() + 1);
+              this.setCurrentMonth(newDate);
+            }}
+          >
+            <i class="icon icon-arrow-right"></i>
+          </button>
         </div>
-    
-        {this.calendarBody}
-      </div>
-    </div>;
 
-    this.setCurrentMonth(currentMonth);    
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <div class="calendar-date">Pr</div>
+            <div class="calendar-date">O</div>
+            <div class="calendar-date">Tr</div>
+            <div class="calendar-date">Ce</div>
+            <div class="calendar-date">Pk</div>
+            <div class="calendar-date">Se</div>
+            <div class="calendar-date">Sv</div>
+          </div>
+
+          {this.calendarBody}
+        </div>
+      </div>
+    );
+
+    this.setCurrentMonth(currentMonth);
   }
 
   public getCalendarDate(date: Date): CalendarDate | null {
@@ -168,7 +190,6 @@ export class Calendar {
     [fromIndex, toIndex] = [Math.min(fromIndex, toIndex), Math.max(fromIndex, toIndex)];
 
     if (fromIndex !== -1 && toIndex !== -1) {
-
       for (let i = 0; i < this.displayedDateItems.length; i++) {
         const date = this.displayedDateItems[i];
 
@@ -215,17 +236,20 @@ export class Calendar {
     const year = date.getFullYear();
 
     this.displayedDateItems = getMonthDaysWithFullWeeks(this.currentMonth).map(day => {
-      const element = <div
-        class={
-          "calendar-date" + (
-            isNextMonth(day, this.currentMonth) ? " next-month" :
-            isPrevMonth(day, this.currentMonth) ? " prev-month" :
-            ""
-          )
-        }
-      >
-        <button class={"date-item" + (isSameDay(new Date(), day) ? " date-today" : "")}>{day.getDate()}</button>
-      </div>;
+      const element = (
+        <div
+          class={
+            "calendar-date" +
+            (isNextMonth(day, this.currentMonth)
+              ? " next-month"
+              : isPrevMonth(day, this.currentMonth)
+                ? " prev-month"
+                : "")
+          }
+        >
+          <button class={"date-item" + (isSameDay(new Date(), day) ? " date-today" : "")}>{day.getDate()}</button>
+        </div>
+      );
 
       return new CalendarDate(day, element, this.eventTarget);
     });
