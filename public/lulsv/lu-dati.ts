@@ -1,6 +1,23 @@
-let cachedPeople: Promise<Record<string, string>> = fetch("/lulsv/data/PEOPLE.json").then(response => response.json());
-export async function getPeople(): Promise<Record<string, string>> {
-  return await cachedPeople;
+let cachedPeopleKeys: Promise<string[]> = fetch("/lulsv/data/all").then(response => response.json());
+export async function getPeople(): Promise<string[]> {
+  return await cachedPeopleKeys;
+}
+
+let cachedPeople: Record<string, Promise<string | null>> = {};
+export async function getPerson(name: string): Promise<string | null> {
+  if (!(name in cachedPeople)) {
+    cachedPeople[name] = new Promise<string | null>(r => 
+      fetch(`/lulsv/data/${name}`)
+        .then(response => response.status === 200 ? response.text() : null)
+        .then(r)
+        .catch(e => {
+          console.error(e);
+          r(null);
+        })
+      );
+  }
+
+  return await cachedPeople[name];
 }
 
 export const WEEK_ORDINALS = {

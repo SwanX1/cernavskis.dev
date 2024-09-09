@@ -10,6 +10,24 @@ applyConfiguration(app);
 
 app.use(compression({ level: 9 }));
 app.get("/tools/lu-saraksts", (_req, res) => res.redirect(301, "/lulsv"));
+
+const LULSV_PEOPLE: Record<string, string> = await Bun.file(new URL("./data/lulsv_people.json", import.meta.url).pathname).json();
+const LULSV_PEOPLE_KEYS = Object.keys(LULSV_PEOPLE);
+
+app.get("/lulsv/data/all", (_req, res) => {
+  res.json(LULSV_PEOPLE_KEYS);
+  return res.end();
+});
+
+app.get("/lulsv/data/:name", (req, res, next) => {
+  if (req.params.name in LULSV_PEOPLE) {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    return res.end(LULSV_PEOPLE[req.params.name]);
+  } else {
+    return next();
+  }
+});
+
 app.use(
   express.static(new URL("../dist", import.meta.url).pathname, {
     extensions: ["html"],

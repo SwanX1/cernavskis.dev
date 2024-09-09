@@ -1,9 +1,7 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
 import { localGetOrDefault, removeAllChildren } from "../util";
-import { getPeople } from "./lu-dati";
+import { getPeople, getPerson } from "./lu-dati";
 import { displayTable, parseLine } from "./table-gen";
-
-performSanityCheck();
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
@@ -43,9 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       window.localStorage.setItem("rememberedValue", input.value);
 
-      const dataLine = (await getPeople())[input.value];
+      const dataLine = await getPerson(input.value);
 
-      if (!dataLine) {
+      if (dataLine === null) {
         throw new Error("No data found for name: " + input.value);
       }
 
@@ -88,10 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               {error}
             </div>
-            {createAutocompleteMenu(
-              getPeople().then(obj => Object.keys(obj)),
-              input
-            )}
+            {createAutocompleteMenu(getPeople(), input)}
             <div class="float-right">{exportButton}</div>
             {example}
           </div>
@@ -177,17 +172,26 @@ function createAutocompleteMenu(data: Promise<string[]>, input: HTMLInputElement
   return ul;
 }
 
+// Leave this here in case we need to do some sanity checks
 async function performSanityCheck(): Promise<void> {
   const PEOPLE = await getPeople();
   // Perform sanity check
-  for (const name of Object.keys(PEOPLE)) {
+  for (const name of PEOPLE) {
+    const line = await getPerson(name);
+    if (line === null) {
+      console.error("Failed to get data for name:", name);
+      continue;
+    }
     try {
-      parseLine(PEOPLE[name as keyof typeof PEOPLE]);
+      parseLine(line);
     } catch (e) {
       console.error("Failed sanity check for name:", name);
     }
   }
 }
+
+// @ts-expect-error i cba to make a global declaration
+window.performSanityCheck = performSanityCheck;
 
 // function createICS(lections: Lection[]): string {
 //   let ics = `
