@@ -14,28 +14,21 @@ export function createTable(headers: (string | HTMLElement)[], entries: (string 
     columnClasses = Array(headers.length).fill(undefined);
   }
   
-  const headerRow = <tr></tr>;
-  for (let i = 0; i < headers.length; i++) {
-    const header = headers[i];
-    headerRow.appendChild(<th class={columnClasses[i] ?? ""}>{ header }</th>);
-  }
-
-  const tableBody = <tbody></tbody>;
-
-  for (const row of entries) {
-    const rowElement = <tr></tr>;
-    for (let i = 0; i < row.length; i++) {
-      const cell = row[i];
-      rowElement.appendChild(<td class={columnClasses[i] ?? ""}>{ cell }</td>);
-    }
-    tableBody.appendChild(rowElement);
-  }
-
   return <table class="table">
     <thead>
-      { headerRow }
+      <tr>
+        { ...headers.map((header, i) => <th class={columnClasses[i] ?? ""}>{ header }</th>) }
+      </tr>
     </thead>
-    { tableBody }
+    <tbody>
+      {
+        ...entries.map((row, i) =>
+          <tr>
+            { ...row.map((cell, i) => <td class={columnClasses[i] ?? ""}>{ cell }</td>) }
+          </tr>
+        )
+      }
+    </tbody>
   </table>;
 }
 

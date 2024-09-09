@@ -5,14 +5,14 @@ import { localGetOrDefault, removeAllChildren } from "./util";
 
 performSanityCheck();
 
-const input = <input type="text" class="form-input" id="input-data"></input>;
-const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
-const submit = <button class="btn btn-primary input-group-btn mr-1">Vienkāršot!</button>;
-const tableContainer = <div></div> as HTMLDivElement;
-const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā.<br />Jāuzspiež uz viņa, lai vārds būtu precīzs,<br />jo bez tā nevar atrast datus.</p>;
-const error = <p class="form-input-hint" style="display: none;">Notika kļūda! Paziņojiet par to administratoram!</p>;
-
 document.addEventListener("DOMContentLoaded", () => {
+  const input = <input type="text" class="form-input" id="input-data"></input>;
+  const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
+  const submit = <button class="btn btn-primary input-group-btn mr-1" on:click={showTable}>Vienkāršot!</button>;
+  const tableContainer = <div></div> as HTMLDivElement;
+  const example = <p class="form-input-hint">Ierakstot vārdu, tas parādīsies sarakstā.<br />Jāuzspiež uz viņa, lai vārds būtu precīzs,<br />jo bez tā nevar atrast datus.</p>;
+  const error = <p class="form-input-hint" style="display: none;">Notika kļūda! Paziņojiet par to administratoram!</p>;
+
   async function showTable() {
     error.style.display = "none";
     input.classList.remove("is-error");
@@ -37,8 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
       input.classList.add("is-error");
     }
   }
-
-  submit.addEventListener("click", showTable);
 
   { // Backwards compat
     let cachedValue = localGetOrDefault("rememberedValue", "");
@@ -120,18 +118,18 @@ function createAutocompleteMenu(data: Promise<string[]>, input: HTMLInputElement
     }
     
     sorted.forEach(str => {
-      const li = <li class="menu-item"></li>;
-      const a = <a href="#"><div class="tile tile-centered"></div></a>;
-      const tileContent = <div class="tile-content"></div>;
-      tileContent.textContent = str;
-      a.appendChild(tileContent);
-      li.appendChild(a);
-      ul.appendChild(li);
-
-      li.addEventListener("click", () => {
+      const li = <li class="menu-item" on:click={() => {
         input.value = str;
         ul.style.display = "none";
-      });
+      }}>
+        <a href="#">
+          <div class="tile tile-centered">
+            <div class="tile-content">{ str }</div>
+          </div>
+        </a>
+      </li>;
+
+      ul.appendChild(li);
     });
 
     ul.style.display = "block";

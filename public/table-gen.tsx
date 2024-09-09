@@ -143,18 +143,6 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
       throw new Error("Invalid lection name");
     }
 
-    let linkButton = <></>;
-    if (lection.name in LECTION_LINKS) {
-      linkButton = <button class="btn tooltip tooltip-left hide-xl" data-tooltip={`Atvērt ${lection.name} e-studijās`}><i class="icon icon-link"></i></button>;
-      linkButton.addEventListener("click", () => window.location.assign(LECTION_LINKS[lection.name as keyof typeof LECTION_LINKS]));
-    }
-
-    const modalButton = <button class="btn show-xl"><i class="icon icon-more-vert"></i></button>;
-    modalButton.addEventListener("click", () => {
-      const modal = createLectionModal(lection);
-      document.body.appendChild(modal);
-    });
-
     let { room, prof } = getRoomAndProf(getLectionKey(lection)) ?? { room: null, prof: null };
 
     if (!room) {
@@ -191,8 +179,12 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
       room,
       lection.group ?? "",
       <>
-        {linkButton}
-        {modalButton}
+        {
+          lection.name in LECTION_LINKS ?
+          <button class="btn tooltip tooltip-left hide-xl" data-tooltip={`Atvērt ${lection.name} e-studijās`} on:click={() => window.location.assign(LECTION_LINKS[lection.name as keyof typeof LECTION_LINKS])}><i class="icon icon-link"></i></button> :
+          <></>
+        }
+        <button class="btn show-xl" on:click={() => document.body.appendChild(createLectionModal(lection))}><i class="icon icon-more-vert"></i></button>
       </>,
     ];
   });
@@ -203,10 +195,7 @@ export function createDataTable(data: PersonData, onClose?: () => void): HTMLEle
     ["", "", "hide-xl", "", "hide-xl", "hide-xl", ""]
   );
 
-  const closeButton = <button class="btn float-right m-1">Aizvērt tabulu <i class="icon icon-cross"></i></button>;
-
-  closeButton.addEventListener("click", onClose);
-
+  const closeButton = <button class="btn float-right m-1" on:click={onClose}>Aizvērt tabulu <i class="icon icon-cross"></i></button>;
 
   const startOfWeek = new Date();
   startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1);
