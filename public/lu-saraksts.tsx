@@ -6,7 +6,7 @@ import { localGetOrDefault, removeAllChildren } from "./util";
 performSanityCheck();
 
 document.addEventListener("DOMContentLoaded", () => {
-  const input = <input type="text" class="form-input" id="input-data"></input>;
+  const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
   const exportButton = <button class="btn disabled tooltip tooltip-bottom mx-1" data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}><i class="icon icon-share"></i> Exportēt ICS</button>;
   const submit = <button class="btn btn-primary input-group-btn mr-1" on:click={showTable}>Vienkāršot!</button>;
   const tableContainer = <div></div> as HTMLDivElement;
@@ -63,9 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="form-group form-autocomplete">
             <div class="form-autocomplete-input">
               <div class="input-group">
-                <label for="input-data" class="form-label input-group-addon">
-                Ierakstiet savu vārdu:
-                </label>
                 { input }
                 { submit }
               </div>
