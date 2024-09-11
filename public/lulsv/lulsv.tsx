@@ -1,19 +1,36 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
 import { Calendar, getWeek } from "../components/Calendar";
-import { localGetOrDefault, removeAllChildren } from "../util";
+import { downloadFile, localGetOrDefault, removeAllChildren } from "../util";
 import { getPeople, getPerson, MONTH_LOCALE_SHORT, WEEK_ORDINALS } from "./lu-dati";
-import { displayTable, parseLine, type Lection } from "./table-gen";
+import { displayTable, isLectionInWeek, parseLine, type Lection, type PersonData } from "./table-gen";
+import { ExportICSDialog } from "./ExportICSDialog";
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
+  let personData: PersonData | null = null;
+  const exportICSDialog = <ExportICSDialog getData={() => personData}/>;
   const exportButton = (
     <button
-      class="btn disabled tooltip tooltip-bottom mx-1"
-      data-tooltip={"ICS failu var importēt jebkurā kalendārā\nFunkcija vēl nestrādā :/"}
+      class="btn tooltip tooltip-left mx-1 disabled"
+      data-tooltip={"ICS failu var importēt jebkurā kalendārā"}
+      on:click={() => {
+        if (exportICSDialog.style.display === "block") {
+          exportICSDialog.style.display = "none";
+        } else {
+          exportICSDialog.style.display = "block";
+        }
+      }}
     >
-      <i class="icon icon-share"></i> Exportēt ICS
+      <i class="icon icon-share"></i> Eksportēt ICS
     </button>
   );
+
+  window.addEventListener("click", e => {
+    if (!(exportICSDialog.contains(e.target as Node) || exportButton.contains(e.target as Node))) {
+      exportICSDialog.style.display = "none";
+    }
+  });
+
   const submit = (
     <button class="btn btn-primary input-group-btn mr-1" on:click={showTable}>
       Vienkāršot!
@@ -64,14 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const weekEnd = new Date(weekStart);
     weekEnd.setDate(weekEnd.getDate() + 6);
 
-    const calendarWeekStart = calendar.getCalendarDate(weekStart);
-    const calendarWeekEnd = calendar.getCalendarDate(weekEnd);
-
-    if (calendarWeekStart === null || calendarWeekEnd === null) {
-      return;
-    }
-
-    calendar.setSelectedRange(calendarWeekStart, calendarWeekEnd);
+    calendar.setSelectedRange(weekStart, weekEnd);
 
     calendar.element.style.display = "none";
 
@@ -93,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     error.style.display = "none";
     input.classList.remove("is-error");
 
+    exportButton.classList.add("disabled");
     try {
       window.localStorage.setItem("rememberedValue", input.value);
 
@@ -102,14 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("No data found for name: " + input.value);
       }
 
-      console.log({ rangeStart });
+      personData = parseLine(dataLine);
+      displayTable(tableContainer, personData, lection => rangeStart === null || isLectionInWeek(rangeStart, lection));
 
-      displayTable(tableContainer, parseLine(dataLine), lection => {
-        if (rangeStart === null) {
-          return true;
-        }
-        return isLectionInWeek(rangeStart, lection);
-      });
+      exportButton.classList.remove("disabled");
       example.style.display = "none";
     } catch (e) {
       console.error("Error while doing the main shit", e);
@@ -147,7 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             {createAutocompleteMenu(getPeople(), input)}
             {viewWeekButton}
-            <div class="float-right">{exportButton}</div>
+            <div class="float-right">
+              {exportICSDialog}
+              {exportButton}
+            </div>
             {example}
           </div>
 
@@ -248,41 +258,6 @@ async function performSanityCheck(): Promise<void> {
       console.error("Failed sanity check for name:", name);
     }
   }
-}
-
-function isLectionInWeek(week: Date, lection: Lection): boolean {
-  if (typeof lection.weekFilter === "undefined") {
-    return true;
-  }
-
-  week = getWeek(week);
-
-  const weekKey =
-    `${week.getFullYear()}${(week.getMonth() + 1).toString().padStart(2, "0")}${week.getDate().toString().padStart(2, "0")}` as keyof typeof WEEK_ORDINALS;
-
-  const weekOrdinal = WEEK_ORDINALS[weekKey];
-
-  if (!weekOrdinal) {
-    console.error("Failed to get week ordinal for date:", weekKey);
-    return false;
-  }
-
-  if (lection.weekFilter === "even") {
-    console.log("Lection is even", weekOrdinal);
-    return weekOrdinal % 2 === 0;
-  }
-
-  if (lection.weekFilter === "odd") {
-    console.log("Lection is odd", weekOrdinal);
-    return weekOrdinal % 2 === 1;
-  }
-
-  if (Array.isArray(lection.weekFilter)) {
-    console.log("Lection is array", weekOrdinal);
-    return lection.weekFilter.includes(weekOrdinal);
-  }
-
-  return true;
 }
 
 // @ts-expect-error i cba to make a global declaration

@@ -25,10 +25,23 @@ body {
 }
 
 .calendar {
-  min-width: 230px;
-  max-width: 250px;
+  min-width: 240px;
+  max-width: 290px;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.text-nowrap {
+  text-wrap: nowrap;
 }
 
 .mw-100 {
   max-width: 100vw;
+}
+
+.export-ics-dialog {
+  position: relative;
+  translate: -5rem 0;
 }

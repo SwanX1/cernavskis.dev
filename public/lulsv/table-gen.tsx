@@ -11,7 +11,9 @@ import {
   PROFS,
   ROOMS,
   TIME_TO_RANGE,
+  WEEK_ORDINALS,
 } from "./lu-dati";
+import { getWeek } from "../components/Calendar";
 
 export interface PersonData {
   id: number;
@@ -27,6 +29,49 @@ export interface Lection {
   time: string;
   group?: string;
   weekFilter?: "even" | "odd" | number[];
+}
+
+export function isLectionOnDay(date: Date, lection: Lection): boolean {
+  return lection.day === ["Pr", "O", "T", "C", "Pk"][date.getDay() - 1] && isLectionInWeek(date, lection);
+}
+
+export function isLectionInWeek(week: Date, lection: Lection): boolean {
+  if (typeof lection.weekFilter === "undefined") {
+    return true;
+  }
+
+  if (lection.name === "DatZB067L" && week.getTime() < getWeek(new Date(2021, 8, 23)).getTime()) {
+    return false;
+  }
+
+  week = getWeek(week);
+
+  const weekKey =
+    `${week.getFullYear()}${(week.getMonth() + 1).toString().padStart(2, "0")}${week.getDate().toString().padStart(2, "0")}` as keyof typeof WEEK_ORDINALS;
+
+  const weekOrdinal = WEEK_ORDINALS[weekKey];
+
+  if (!weekOrdinal) {
+    console.error("Failed to get week ordinal for date:", weekKey);
+    return false;
+  }
+
+  if (lection.weekFilter === "even") {
+    console.log("Lection is even", weekOrdinal);
+    return weekOrdinal % 2 === 0;
+  }
+
+  if (lection.weekFilter === "odd") {
+    console.log("Lection is odd", weekOrdinal);
+    return weekOrdinal % 2 === 1;
+  }
+
+  if (Array.isArray(lection.weekFilter)) {
+    console.log("Lection is array", weekOrdinal);
+    return lection.weekFilter.includes(weekOrdinal);
+  }
+
+  return true;
 }
 
 export function displayTable(

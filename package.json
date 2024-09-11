@@ -25,6 +25,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "helmet": "^7.1.0",
+    "ical-generator": "^8.0.0",
     "logerian": "^3.1.0",
     "rate-limiter-flexible": "^5.0.3",
     "simple-jsx-handler": "^1.2.2"

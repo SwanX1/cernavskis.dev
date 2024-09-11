@@ -1,5 +1,12 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
 
+export function downloadFile(file: File): void {
+  const url = URL.createObjectURL(file);
+  const a = <a href={url} download={file.name}></a>;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function localGetOrDefault(key: string, defaultValue: string): string {
   let current = window.localStorage.getItem(key);
   if (current === null) {

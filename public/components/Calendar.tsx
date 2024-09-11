@@ -115,17 +115,19 @@ export class Calendar {
   public readonly element: HTMLElement;
   private readonly calendarBody: HTMLElement;
   private readonly calendarHeader: HTMLElement;
+  private readonly calendarFooter: HTMLElement;
   private selectedRange: [CalendarDate, CalendarDate] | null = null;
   private displayedDateItems: CalendarDate[] = [];
   private eventTarget = createCalendarDateEventTarget();
 
   public constructor(private currentMonth: Date) {
     this.calendarBody = <div class="calendar-body"></div>;
-    this.calendarHeader = <div class="navbar-primary"></div>;
+    this.calendarHeader = <div class="navbar-primary text-center text-nowrap"></div>;
+    this.calendarFooter = <div class="calendar-footer"></div>;
 
     this.element = (
       <div class="calendar p-absolute bg-light" style="z-index: 1;">
-        <div class="calendar-nav navbar">
+        <div class="calendar-nav navbar flex-nowrap">
           <button
             class="btn btn-action btn-link btn-lg"
             on:click={() => {
@@ -161,6 +163,7 @@ export class Calendar {
           </div>
 
           {this.calendarBody}
+          {this.calendarFooter}
         </div>
       </div>
     );
@@ -177,38 +180,51 @@ export class Calendar {
     return null;
   }
 
-  public setSelectedRange(from: CalendarDate, to: CalendarDate): void {
-    this.selectedRange = [from, to];
+  public setSelectedRange(from: Date, to: Date): void {
+    this.selectedRange = [from, to].sort((a, b) => a.getTime() - b.getTime()).map(date => this.getCalendarDate(date)) as [CalendarDate, CalendarDate];
 
-    for (const date of this.displayedDateItems) {
-      date.element.classList.remove("selected");
+    if (this.displayedDateItems[0].date.getTime() > to.getTime() || this.displayedDateItems[this.displayedDateItems.length - 1].date.getTime() < from.getTime()) {
+      return; // Display is out of range
     }
 
-    let fromIndex = this.displayedDateItems.indexOf(from);
-    let toIndex = this.displayedDateItems.indexOf(to);
+    console.log("setSelectedRange", { from, to });
 
-    [fromIndex, toIndex] = [Math.min(fromIndex, toIndex), Math.max(fromIndex, toIndex)];
+    for (const date of this.displayedDateItems) {
+      date.element.classList.remove("calendar-range");
+      date.element.classList.remove("range-start");
+      date.element.classList.remove("range-end");
+    }
 
-    if (fromIndex !== -1 && toIndex !== -1) {
-      for (let i = 0; i < this.displayedDateItems.length; i++) {
-        const date = this.displayedDateItems[i];
+    let fromIndex = this.displayedDateItems.indexOf(this.selectedRange[0]);
+    let toIndex = this.displayedDateItems.indexOf(this.selectedRange[1]);
 
-        if (i >= fromIndex && i <= toIndex) {
-          date.element.classList.add("calendar-range");
-        } else {
-          date.element.classList.remove("calendar-range");
-        }
+    if (fromIndex === -1) {
+      fromIndex = -Infinity;
+    }
 
-        if (i === fromIndex) {
-          date.element.classList.add("range-start");
-        }
+    if (toIndex === -1) {
+      toIndex = Infinity;
+    }
 
-        if (i === toIndex) {
-          date.element.classList.add("range-end");
-        }
+    for (let i = 0; i < this.displayedDateItems.length; i++) {
+      const date = this.displayedDateItems[i];
+
+      if (fromIndex <= i && i <= toIndex) {
+        console.log("range", { fromIndex, toIndex, i, date: date.date.toDateString() });
+        date.element.classList.add("calendar-range");
+      } else {
+        date.element.classList.remove("calendar-range");
       }
-    } else {
-      console.error("Invalid range", from, to);
+      
+      if (i === fromIndex) {
+        console.log("start", { fromIndex, toIndex, i, date: date.date.toDateString() });
+        date.element.classList.add("range-start");
+      }
+      
+      if (i === toIndex) {
+        console.log("end", { fromIndex, toIndex, i, date: date.date.toDateString() });
+        date.element.classList.add("range-end");
+      }
     }
   }
 
@@ -270,6 +286,10 @@ export class Calendar {
 
   public isDateVisible(date: Date): boolean {
     return false;
+  }
+
+  public appendInFooter(element: HTMLElement): void {
+    this.calendarFooter.appendChild(element);
   }
 
   public onHover(listener: (date: CalendarDate, event: CalendarDateEvent) => void): void {
