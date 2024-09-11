@@ -181,9 +181,14 @@ export class Calendar {
   }
 
   public setSelectedRange(from: Date, to: Date): void {
-    this.selectedRange = [from, to].sort((a, b) => a.getTime() - b.getTime()).map(date => this.getCalendarDate(date)) as [CalendarDate, CalendarDate];
+    this.selectedRange = [from, to]
+      .sort((a, b) => a.getTime() - b.getTime())
+      .map(date => this.getCalendarDate(date)) as [CalendarDate, CalendarDate];
 
-    if (this.displayedDateItems[0].date.getTime() > to.getTime() || this.displayedDateItems[this.displayedDateItems.length - 1].date.getTime() < from.getTime()) {
+    if (
+      this.displayedDateItems[0].date.getTime() > to.getTime() ||
+      this.displayedDateItems[this.displayedDateItems.length - 1].date.getTime() < from.getTime()
+    ) {
       return; // Display is out of range
     }
 
@@ -215,12 +220,12 @@ export class Calendar {
       } else {
         date.element.classList.remove("calendar-range");
       }
-      
+
       if (i === fromIndex) {
         console.log("start", { fromIndex, toIndex, i, date: date.date.toDateString() });
         date.element.classList.add("range-start");
       }
-      
+
       if (i === toIndex) {
         console.log("end", { fromIndex, toIndex, i, date: date.date.toDateString() });
         date.element.classList.add("range-end");

@@ -1,14 +1,14 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
 import { Calendar, getWeek } from "../components/Calendar";
-import { downloadFile, localGetOrDefault, removeAllChildren } from "../util";
-import { getPeople, getPerson, MONTH_LOCALE_SHORT, WEEK_ORDINALS } from "./lu-dati";
-import { displayTable, isLectionInWeek, parseLine, type Lection, type PersonData } from "./table-gen";
+import { localGetOrDefault, removeAllChildren } from "../util";
 import { ExportICSDialog } from "./ExportICSDialog";
+import { getPeople, getPerson, MONTH_LOCALE_SHORT } from "./lu-dati";
+import { displayTable, isLectionInWeek, parseLine, type PersonData } from "./table-gen";
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = <input type="text" class="form-input" placeholder="Ieraksti savu vārdu"></input>;
   let personData: PersonData | null = null;
-  const exportICSDialog = <ExportICSDialog getData={() => personData}/>;
+  const exportICSDialog = <ExportICSDialog getData={() => personData} />;
   const exportButton = (
     <button
       class="btn tooltip tooltip-left mx-1 disabled"

@@ -1,4 +1,5 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
+import { getWeek } from "../components/Calendar";
 import { createTable, removeAllChildren } from "../util";
 import { createLectionModal } from "./LectionInfoModal";
 import {
@@ -13,7 +14,6 @@ import {
   TIME_TO_RANGE,
   WEEK_ORDINALS,
 } from "./lu-dati";
-import { getWeek } from "../components/Calendar";
 
 export interface PersonData {
   id: number;
