@@ -1,25 +1,3 @@
-let cachedPeopleKeys: Promise<string[]> = fetch("/lulsv/data/all").then(response => response.json());
-export async function getPeople(): Promise<string[]> {
-  return await cachedPeopleKeys;
-}
-
-let cachedPeople: Record<string, Promise<string | null>> = {};
-export async function getPerson(name: string): Promise<string | null> {
-  if (!(name in cachedPeople)) {
-    cachedPeople[name] = new Promise<string | null>(r =>
-      fetch(`/lulsv/data/${name}`)
-        .then(response => (response.status === 200 ? response.text() : null))
-        .then(r)
-        .catch(e => {
-          console.error(e);
-          r(null);
-        })
-    );
-  }
-
-  return await cachedPeople[name];
-}
-
 export const WEEK_ORDINALS = {
   "20240902": 1,
   "20240909": 2,
@@ -103,157 +81,516 @@ export const MONTH_LOCALE_SHORT = [
 ];
 
 export const TIME_TO_RANGE = {
-  "8:30": "08:30 - 10:10",
-  "10:30": "10:30 - 12:10",
-  "12:30": "12:30 - 14:10",
-  "14:30": "14:30 - 16:10",
-  "16:30": "16:30 - 18:05",
-  "18:15": "18:15 - 19:50",
-  "20:00": "20:00 - 21:35",
+  "0830": "08:30 - 10:10",
+  "1030": "10:30 - 12:10",
+  "1230": "12:30 - 14:10",
+  "1430": "14:30 - 16:10",
+  "1630": "16:30 - 18:05",
+  "1815": "18:15 - 19:50",
+  "2000": "20:00 - 21:35",
 };
 
-export const LECTION_NAMES = {
-  DatZB001: "Tīmekļa tehnoloģijas I",
-  DatZB001L: "Tīmekļa tehnoloģijas I (laboratorijas darbs)",
-  DatZB009: "Algoritmi un programmēšana",
-  DatZB009L: "Algoritmi un programmēšana (laboratorijas darbs)",
-  DatZB009P: "Algoritmi un programmēšana (praktiskais darbs)",
-  DatZB010: "Diskrētā matemātika datoriķiem",
-  DatZB010I: "Izlīdzinošais kurss vidusskolas matemātikā",
-  DatZB018: "Operētājsistēmas",
-  DatZB066: "Datorsistēmu arhitektūra un datoru inženierijas pamati I",
-  DatZB067: "Datoru tīkli I un ieskats nozarē",
-  DatZB067L: "Datoru tīkli I un ieskats nozarē (laboratorijas darbs)",
+export const COURSE_NAMES = {
+  DatZB007: "Programmatūras izstrādes pamati",
+  DatZB007L: "Programmatūras izstrādes pamati (laboratorijas darbs)",
+  DatZB032: "Tīmekļa tehnoloģijas II",
+  DatZB032L: "Tīmekļa tehnoloģijas II (laboratorijas darbs)",
+  DatZB034: "Datortīklu administrēšana",
+  DatZB068: "Datu bāzes un informācijas sistēmu pamati",
+  DatZB068L: "Datu bāzes un informācijas sistēmu pamati (laboratorijas darbs)",
+  Mate1014: "Matemātiskā analīze I",
+  MateB073: "Lineārā algebra I",
+  MateB091: "Matemātiskā analīze I",
+  MateB092: "Algebra",
+  MateB092I: "Izlīdzinošais kurss matemātikā",
+  MateB097: "Lineārā algebra II",
+  SDSKB110: "Internets, tīkla etiķete un tiesiskais regulējums",
+  ValoB226: "Nozares angļu valoda datorzinātnēs",
 };
 
-export const LECTION_NAMES_SHORT = {
-  DatZB001: "Tīmekļa tehn.",
-  DatZB001L: "Tīmekļa tehn. (lab.)",
-  DatZB009: "Alg. un prog.",
-  DatZB009L: "Alg. un prog. (lab.)",
-  DatZB009P: "Alg. un prog. (prak.)",
-  DatZB010: "Diskrētā mat.",
-  DatZB010I: "Izl. kurss mat.",
-  DatZB018: "Operētājsist.",
-  DatZB066: "Datorsist. un inž. pamati",
-  DatZB067: "Datoru tīkli",
-  DatZB067L: "Datoru tīkli (lab.)",
+export const COURSE_NAMES_SHORT = {
+  DatZB007: "Prog. izstr. pam.",
+  DatZB007L: "Prog. izstr. pam. (lab.)",
+  DatZB032: "Tīmekļa tehn. II",
+  DatZB032L: "Tīmekļa tehn. II (lab.)",
+  DatZB034: "Datortīklu admin.",
+  DatZB068: "Datu bāzes un IS pam.",
+  DatZB068L: "Datu bāzes un IS pam. (lab.)",
+  Mate1014: "Mat. anal. I",
+  MateB073: "Lineārā algebra I",
+  MateB091: "Mat. anal. I",
+  MateB092: "Algebra",
+  DatZB092I: "Izl. kurss mat.",
+  MateB097: "Lineārā algebra II",
+  SDSKB110: "Internets, tīkla etiķ. un ties. reg.",
+  ValoB226: "Angļu val. datorz.",
 };
 
-const LECTION_BASE_LINK = "https://estudijas.lu.lv/course/view.php?id=";
-export const LECTION_LINKS = {
-  DatZB001: LECTION_BASE_LINK + 17251,
-  DatZB001L: LECTION_BASE_LINK + 17251,
-  DatZB009: LECTION_BASE_LINK + 17253,
-  DatZB009L: LECTION_BASE_LINK + 17253,
-  DatZB009P: LECTION_BASE_LINK + 17253,
-  DatZB010: LECTION_BASE_LINK + 17071,
-  DatZB010I: LECTION_BASE_LINK + 17071,
-  DatZB018: LECTION_BASE_LINK + 17073,
-  DatZB066: LECTION_BASE_LINK + 17038,
-  DatZB067: LECTION_BASE_LINK + 17127,
-  DatZB067L: LECTION_BASE_LINK + 17127,
-};
-
-export const PROFS = [
-  "asoc. prof. Dr. dat. U. Bojārs",
-  "asoc. prof. Dr. sc. comp. L. Trukšāns",
-  "asoc. prof. Dr. sc. comp. L.Trukšāns",
-  "doc. Dr. sc. comp. E. Diebelis",
-  "doc. Dr. sc. comp. E. Rencis",
-  "p. M. Balode",
-  "p. Mg. sc. comp. I. Mizniks",
-  "pasn. Dr. D. S. Rikačovs",
-  "pasn. Dr. S. Rikačovs",
-  "pasn. Mg. M. Ivanovs",
-  "pasn. Mg. sc. comp. I. Mizniks",
-  "prof. Dr. sc. comp. D. Solodovņikova",
-  "prof. Dr. sc. comp. D.Solodovņikova",
-  "prof. Dr. sc. comp. G. Arnicāns",
-  "prof. Dr. sc. comp. J. Smotrovs",
-  "prof. Dr. sc. comp. L. Seļāvo",
-  "prof. Dr. sc. comp. U. Straujums, prof. Dr. sc. comp. J. Zuters",
-  "prof. Dr. sc. comp. U. Straujums",
+export const LECTURES: {
+  day: keyof typeof DAY_LOCALE,
+  time: keyof typeof TIME_TO_RANGE,
+  course: keyof typeof COURSE_NAMES,
+  groups: [string, "even" | "odd" | null | number[]][],
+  professor: string,
+  room: string,
+}[] = [
+  {
+    day: "Pr",
+    time: "0830",
+    course: "DatZB032",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. D. Solodovņikova",
+    room: "18",
+  },
+  {
+    day: "Pr",
+    time: "1030",
+    course: "DatZB007",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. G. Arnicāns",
+    room: "13",
+  },
+  {
+    day: "Pr",
+    time: "1030",
+    course: "DatZB032",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. D. Solodovņikova",
+    room: "18",
+  },
+  {
+    day: "Pr",
+    time: "1230",
+    course: "DatZB007",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. G. Arnicāns",
+    room: "13",
+  },
+  {
+    day: "Pr",
+    time: "1230",
+    course: "SDSKB110",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. M. Vītiņš",
+    room: "16",
+  },
+  {
+    day: "Pr",
+    time: "1430",
+    course: "SDSKB110",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. M. Vītiņš",
+    room: "16",
+  },
+  {
+    day: "Pr",
+    time: "1430",
+    course: "MateB073",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. J. Smotrovs",
+    room: "18",
+  },
+  {
+    day: "Pr",
+    time: "1630",
+    course: "MateB073",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. J. Smotrovs",
+    room: "18",
+  },
+  {
+    day: "Pr",
+    time: "1630",
+    course: "DatZB032L",
+    groups: [
+      ["A", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. M. Ivanovs",
+    room: "336",
+  },
+  {
+    day: "Pr",
+    time: "1815",
+    course: "DatZB032L",
+    groups: [
+      ["B", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. M. Ivanovs",
+    room: "336",
+  },
+  {
+    day: "Pr",
+    time: "2000",
+    course: "DatZB032L",
+    groups: [
+      ["C", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. M. Ivanovs",
+    room: "336",
+  },
+  {
+    day: "O",
+    time: "1030",
+    course: "DatZB007",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. U. Straujums, prof., Dr. sc. comp. J. Zuters",
+    room: "13",
+  },
+  {
+    day: "O",
+    time: "1030",
+    course: "DatZB068",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. Ģ. Karnītis, prof., Dr. sc. comp. L. Niedrīte",
+    room: "16",
+  },
+  {
+    day: "O",
+    time: "1230",
+    course: "DatZB007",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. U. Straujums, prof., Dr. sc. comp. J. Zuters",
+    room: "13",
+  },
+  {
+    day: "O",
+    time: "1230",
+    course: "DatZB068",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. Ģ. Karnītis, prof., Dr. sc. comp. L. Niedrīte",
+    room: "16",
+  },
+  {
+    day: "O",
+    time: "1430",
+    course: "MateB073",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. sc. comp. J. Smotrovs",
+    room: "16",
+  },
+  {
+    day: "O",
+    time: "1430",
+    course: "MateB097",
+    groups: [],
+    professor: "prof., Dr. sc. comp. J. Smotrovs",
+    room: "16",
+  },
+  {
+    day: "O",
+    time: "1630",
+    course: "MateB092I",
+    groups: [
+      ["II", null],
+    ],
+    professor: "pasn., Mg. ped. M. Balode",
+    room: "13",
+  },
+  {
+    day: "O",
+    time: "1815",
+    course: "MateB092I",
+    groups: [
+      ["I", null],
+    ],
+    professor: "pasn., Mg. ped. M. Balode",
+    room: "13",
+  },
+  {
+    day: "O",
+    time: "1815",
+    course: "DatZB032L",
+    groups: [
+      ["F", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. I.Mizniks",
+    room: "336",
+  },
+  {
+    day: "T",
+    time: "0830",
+    course: "MateB073",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. sc. comp. J. Smotrovs",
+    room: "18",
+  },
+  {
+    day: "T",
+    time: "0830",
+    course: "MateB097",
+    groups: [],
+    professor: "prof., Dr. sc. comp. J. Smotrovs",
+    room: "18",
+  },
+  {
+    day: "T",
+    time: "1030",
+    course: "MateB091",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. matem. I. Bula",
+    room: "415",
+  },
+  {
+    day: "T",
+    time: "1030",
+    course: "MateB092",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. matem. K. Podnieks",
+    room: "13",
+  },
+  {
+    day: "T",
+    time: "1230",
+    course: "MateB091",
+    groups: [
+      ["I", null],
+    ],
+    professor: "prof., Dr. matem. I. Bula",
+    room: "415",
+  },
+  {
+    day: "T",
+    time: "1230",
+    course: "MateB092",
+    groups: [
+      ["II", null],
+    ],
+    professor: "prof., Dr. matem. K. Podnieks",
+    room: "13",
+  },
+  {
+    day: "T",
+    time: "1430",
+    course: "DatZB034",
+    groups: [],
+    professor: "asoc. prof., Dr. sc. comp. L. Trukšāns",
+    room: "18",
+  },
+  {
+    day: "T",
+    time: "1630",
+    course: "DatZB032L",
+    groups: [
+      ["K", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. I.Mizniks",
+    room: "336",
+  },
+  {
+    day: "T",
+    time: "1815",
+    course: "DatZB032L",
+    groups: [
+      ["G", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. I. Mizniks",
+    room: "336",
+  },
+  {
+    day: "T",
+    time: "2000",
+    course: "DatZB032L",
+    groups: [
+      ["H", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. I. Mizniks",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "0830",
+    course: "DatZB007L",
+    groups: [
+      ["1", "odd"],
+      ["3", "even"],
+    ],
+    professor: "prof., Dr. sc. comp. U. Straujums",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "0830",
+    course: "DatZB068L",
+    groups: [
+      ["7", "odd"],
+      ["8", "even"],
+    ],
+    professor: "doc., Dr. sc. comp. L. Lāce",
+    room: "345",
+  },
+  {
+    day: "C",
+    time: "1030",
+    course: "DatZB007L",
+    groups: [
+      ["2", "odd"],
+      ["4", "even"],
+    ],
+    professor: "prof., Dr. sc. comp. U. Straujums",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "1030",
+    course: "DatZB068L",
+    groups: [
+      ["1", "odd"],
+      ["3", "even"],
+    ],
+    professor: "doc., Dr. sc. comp. L. Lāce",
+    room: "345",
+  },
+  {
+    day: "C",
+    time: "1230",
+    course: "DatZB007L",
+    groups: [
+      ["5", "odd"],
+    ],
+    professor: "prof., Dr. sc. comp. U. Straujums",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "1230",
+    course: "DatZB068L",
+    groups: [
+      ["2", "odd"],
+      ["4", "even"],
+    ],
+    professor: "doc., Dr. sc. comp. L. Lāce",
+    room: "345",
+  },
+  {
+    day: "C",
+    time: "1230",
+    course: "DatZB007L",
+    groups: [
+      ["7", "even"],
+    ],
+    professor: "p., Mg. sc. comp. I. Mizniks",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "1430",
+    course: "DatZB068L",
+    groups: [
+      ["10", "odd"],
+      ["5", "even"],
+    ],
+    professor: "doc., Dr. sc. comp. L. Lāce",
+    room: "345",
+  },
+  {
+    day: "C",
+    time: "1430",
+    course: "DatZB007L",
+    groups: [
+      ["6", "odd"],
+      ["9", "even"],
+    ],
+    professor: "p., Mg. sc. comp. I. Mizniks",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "1630",
+    course: "DatZB068L",
+    groups: [
+      ["6", "odd"],
+      ["9", "even"],
+    ],
+    professor: "doc., Dr. sc. comp. L. Lāce",
+    room: "345",
+  },
+  {
+    day: "C",
+    time: "1630",
+    course: "DatZB032L",
+    groups: [
+      ["M", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. I. Mizniks",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "1815",
+    course: "DatZB007L",
+    groups: [
+      ["8", "odd"],
+      ["10", "even"],
+    ],
+    professor: "p., Dr. sc. comp. S. Rikačovs",
+    room: "345",
+  },
+  {
+    day: "C",
+    time: "1815",
+    course: "DatZB032L",
+    groups: [
+      ["D", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. M. Ivanovs",
+    room: "336",
+  },
+  {
+    day: "C",
+    time: "2000",
+    course: "DatZB032L",
+    groups: [
+      ["E", [4, 6, 9, 12, 15]],
+    ],
+    professor: "p., Mg. sc. comp. M. Ivanovs",
+    room: "336",
+  },
+  {
+    day: "Pk",
+    time: "0830",
+    course: "ValoB226",
+    groups: [],
+    professor: "lekt. L. Beļicka",
+    room: "14",
+  },
+  {
+    day: "Pk",
+    time: "1030",
+    course: "Mate1014",
+    groups: [],
+    professor: "pr. d. prof., Dr. math. I. Bula",
+    room: "Tiešsaistē",
+  },
 ];
-
-export const ROOMS = [
-  "032. telpa",
-  "13. aud.",
-  "14. aud.",
-  "16. aud.",
-  "18. aud.",
-  "336. telpa",
-  "345. telpa",
-  "415. telpa",
-];
-
-export const LECTION_ROOMS_PROFS = {
-  Pr1030DatZB067: [1, 1],
-  Pr1030DatZB001: [11, 7],
-  Pr1230DatZB001: [11, 7],
-  Pr1230DatZB067: [1, 1],
-  Pr1630DatZB001LA: [0, 5],
-  Pr1815DatZB001LG: [9, 5],
-  Pr2000DatZB001LB: [9, 5],
-  Pr2000DatZB001LC: [12, 6],
-  O0830DatZB001LH: [12, 6],
-  O1030DatZB009: [16, 7],
-  O1030DatZB010: [14, 1],
-  O1230DatZB010: [14, 1],
-  O1230DatZB009: [16, 7],
-  O1430DatZB018: [6, 7],
-  O1630DatZB010I: [5, 7],
-  O1815DatZB010I: [5, 7],
-  T0830DatZB066: [15, 7],
-  T1030DatZB066: [15, 1],
-  T1030DatZB010: [14, 7],
-  T1230DatZB010: [14, 7],
-  T1230DatZB066: [15, 1],
-  T1430DatZB018: [6, 7],
-  T1430DatZB009L4b: [17, 5],
-  T1630DatZB009L7a: [6, 5],
-  T1815DatZB001LD: [12, 5],
-  T2000DatZB001LJ: [12, 5],
-  C0830DatZB009L1a: [17, 5],
-  C0830DatZB009L5a: [8, 6],
-  C0830DatZB067L1b: [2, 0],
-  C0830DatZB067L5b: [2, 0],
-  C1030DatZB009L2a: [17, 5],
-  C1030DatZB067L6b: [1, 0],
-  C1030DatZB009P1: [4, 2],
-  C1030DatZB009P5: [3, 4],
-  C1030DatZB009L6a: [7, 6],
-  C1230DatZB009L1b: [17, 5],
-  C1230DatZB067L1a: [1, 0],
-  C1230DatZB067L5a: [1, 0],
-  C1230DatZB009P2: [4, 2],
-  C1230DatZB009P6: [3, 4],
-  C1230DatZB009L5b: [8, 6],
-  C1430DatZB009L2b: [17, 5],
-  C1430DatZB067L6a: [1, 0],
-  C1430DatZB067L2a: [1, 0],
-  C1430DatZB009L6b: [8, 6],
-  C1630DatZB001LE: [9, 5],
-  C1815DatZB001LF: [9, 5],
-  C1815DatZB001LM: [0, 6],
-  C2000DatZB001LK: [9, 6],
-  C2000DatZB001LL: [0, 6],
-  Pk0830DatZB009L3a: [17, 5],
-  Pk0830DatZB067L7b: [1, 0],
-  Pk0830DatZB067L3b: [1, 0],
-  Pk1030DatZB009L4a: [17, 5],
-  Pk1030DatZB067L8b: [1, 0],
-  Pk1030DatZB067L4b: [1, 0],
-  Pk1030DatZB009P3: [4, 2],
-  Pk1030DatZB009P7: [13, 3],
-  Pk1030DatZB009L8a: [10, 6],
-  Pk1230DatZB009L3b: [17, 5],
-  Pk1230DatZB067L3a: [1, 0],
-  Pk1230DatZB067L7a: [1, 0],
-  Pk1230DatZB009P4: [4, 2],
-  Pk1230DatZB009P8: [13, 3],
-  Pk1230DatZB009L7b: [10, 6],
-  Pk1430DatZB067L8a: [1, 0],
-  Pk1430DatZB067L4a: [1, 0],
-  Pk1430DatZB009L8b: [10, 6],
-};
