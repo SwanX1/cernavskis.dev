@@ -1,12 +1,13 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
-import { Calendar, getWeek } from "../components/Calendar";
-import { localGetOrDefault, removeAllChildren } from "../util";
-import { ExportICSDialog } from "./ExportICSDialog";
+import { getWeek } from "../components/Calendar";
+import { localGetOrDefault } from "../util";
 import { MONTH_LOCALE_SHORT } from "./lu-dati";
 import { displayTable, type Groups } from "./table-gen";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const input: HTMLInputElement = <input type="text" class="form-input" placeholder="Ieraksti plūsmu un grupas (ar komatu atdalītas)"></input>;
+  const input: HTMLInputElement = (
+    <input type="text" class="form-input" placeholder="Ieraksti plūsmu un grupas (ar komatu atdalītas)"></input>
+  );
   let personData: Groups | null = null;
   // const exportICSDialog = <ExportICSDialog getData={() => personData} />;
   const exportButton = (
@@ -60,7 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const viewWeekButton = (
     <div class="float-left">
       {/* {calendar.element} */}
-      <button class="btn mr-2 disabled"> {/*on:click={() => (calendar.element.style.display = "block")}*/}
+      <button class="btn mr-2 disabled">
+        {" "}
+        {/*on:click={() => (calendar.element.style.display = "block")}*/}
         <i class="icon icon-time"></i>&nbsp;{viewWeekButtonText}
       </button>
     </div>
@@ -107,7 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       window.localStorage.setItem("rememberedValue2", input.value);
 
-      displayTable(tableContainer, input.value.split(",").map(str => str.trim()));
+      displayTable(
+        tableContainer,
+        input.value.split(",").map(str => str.trim())
+      );
 
       // exportButton.classList.remove("disabled");
       example.style.display = "none";

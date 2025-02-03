@@ -127,20 +127,18 @@ export const COURSE_NAMES_SHORT = {
 };
 
 export const LECTURES: {
-  day: keyof typeof DAY_LOCALE,
-  time: keyof typeof TIME_TO_RANGE,
-  course: keyof typeof COURSE_NAMES,
-  groups: [string, "even" | "odd" | null | number[]][],
-  professor: string,
-  room: string,
+  day: keyof typeof DAY_LOCALE;
+  time: keyof typeof TIME_TO_RANGE;
+  course: keyof typeof COURSE_NAMES;
+  groups: [string, "even" | "odd" | null | number[]][];
+  professor: string;
+  room: string;
 }[] = [
   {
     day: "Pr",
     time: "0830",
     course: "DatZB032",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. D. Solodovņikova",
     room: "18",
   },
@@ -148,9 +146,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1030",
     course: "DatZB007",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. G. Arnicāns",
     room: "13",
   },
@@ -158,9 +154,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1030",
     course: "DatZB032",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. D. Solodovņikova",
     room: "18",
   },
@@ -168,9 +162,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1230",
     course: "DatZB007",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. G. Arnicāns",
     room: "13",
   },
@@ -178,9 +170,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1230",
     course: "SDSKB110",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. M. Vītiņš",
     room: "16",
   },
@@ -188,9 +178,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1430",
     course: "SDSKB110",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. M. Vītiņš",
     room: "16",
   },
@@ -198,9 +186,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1430",
     course: "MateB073",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. J. Smotrovs",
     room: "18",
   },
@@ -208,9 +194,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1630",
     course: "MateB073",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. J. Smotrovs",
     room: "18",
   },
@@ -218,9 +202,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1630",
     course: "DatZB032L",
-    groups: [
-      ["A", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["A", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. M. Ivanovs",
     room: "336",
   },
@@ -228,9 +210,7 @@ export const LECTURES: {
     day: "Pr",
     time: "1815",
     course: "DatZB032L",
-    groups: [
-      ["B", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["B", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. M. Ivanovs",
     room: "336",
   },
@@ -238,9 +218,7 @@ export const LECTURES: {
     day: "Pr",
     time: "2000",
     course: "DatZB032L",
-    groups: [
-      ["C", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["C", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. M. Ivanovs",
     room: "336",
   },
@@ -248,9 +226,7 @@ export const LECTURES: {
     day: "O",
     time: "1030",
     course: "DatZB007",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. U. Straujums, prof., Dr. sc. comp. J. Zuters",
     room: "13",
   },
@@ -258,9 +234,7 @@ export const LECTURES: {
     day: "O",
     time: "1030",
     course: "DatZB068",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. Ģ. Karnītis, prof., Dr. sc. comp. L. Niedrīte",
     room: "16",
   },
@@ -268,9 +242,7 @@ export const LECTURES: {
     day: "O",
     time: "1230",
     course: "DatZB007",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. U. Straujums, prof., Dr. sc. comp. J. Zuters",
     room: "13",
   },
@@ -278,9 +250,7 @@ export const LECTURES: {
     day: "O",
     time: "1230",
     course: "DatZB068",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. Ģ. Karnītis, prof., Dr. sc. comp. L. Niedrīte",
     room: "16",
   },
@@ -288,9 +258,7 @@ export const LECTURES: {
     day: "O",
     time: "1430",
     course: "MateB073",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. sc. comp. J. Smotrovs",
     room: "16",
   },
@@ -306,9 +274,7 @@ export const LECTURES: {
     day: "O",
     time: "1630",
     course: "MateB092I",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "pasn., Mg. ped. M. Balode",
     room: "13",
   },
@@ -316,9 +282,7 @@ export const LECTURES: {
     day: "O",
     time: "1815",
     course: "MateB092I",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "pasn., Mg. ped. M. Balode",
     room: "13",
   },
@@ -326,9 +290,7 @@ export const LECTURES: {
     day: "O",
     time: "1815",
     course: "DatZB032L",
-    groups: [
-      ["F", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["F", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. I.Mizniks",
     room: "336",
   },
@@ -336,9 +298,7 @@ export const LECTURES: {
     day: "T",
     time: "0830",
     course: "MateB073",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. sc. comp. J. Smotrovs",
     room: "18",
   },
@@ -354,9 +314,7 @@ export const LECTURES: {
     day: "T",
     time: "1030",
     course: "MateB091",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. matem. I. Bula",
     room: "415",
   },
@@ -364,9 +322,7 @@ export const LECTURES: {
     day: "T",
     time: "1030",
     course: "MateB092",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. matem. K. Podnieks",
     room: "13",
   },
@@ -374,9 +330,7 @@ export const LECTURES: {
     day: "T",
     time: "1230",
     course: "MateB091",
-    groups: [
-      ["I", null],
-    ],
+    groups: [["I", null]],
     professor: "prof., Dr. matem. I. Bula",
     room: "415",
   },
@@ -384,9 +338,7 @@ export const LECTURES: {
     day: "T",
     time: "1230",
     course: "MateB092",
-    groups: [
-      ["II", null],
-    ],
+    groups: [["II", null]],
     professor: "prof., Dr. matem. K. Podnieks",
     room: "13",
   },
@@ -402,9 +354,7 @@ export const LECTURES: {
     day: "T",
     time: "1630",
     course: "DatZB032L",
-    groups: [
-      ["K", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["K", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. I.Mizniks",
     room: "336",
   },
@@ -412,9 +362,7 @@ export const LECTURES: {
     day: "T",
     time: "1815",
     course: "DatZB032L",
-    groups: [
-      ["G", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["G", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. I. Mizniks",
     room: "336",
   },
@@ -422,9 +370,7 @@ export const LECTURES: {
     day: "T",
     time: "2000",
     course: "DatZB032L",
-    groups: [
-      ["H", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["H", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. I. Mizniks",
     room: "336",
   },
@@ -476,9 +422,7 @@ export const LECTURES: {
     day: "C",
     time: "1230",
     course: "DatZB007L",
-    groups: [
-      ["5", "odd"],
-    ],
+    groups: [["5", "odd"]],
     professor: "prof., Dr. sc. comp. U. Straujums",
     room: "336",
   },
@@ -497,9 +441,7 @@ export const LECTURES: {
     day: "C",
     time: "1230",
     course: "DatZB007L",
-    groups: [
-      ["7", "even"],
-    ],
+    groups: [["7", "even"]],
     professor: "p., Mg. sc. comp. I. Mizniks",
     room: "336",
   },
@@ -540,9 +482,7 @@ export const LECTURES: {
     day: "C",
     time: "1630",
     course: "DatZB032L",
-    groups: [
-      ["M", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["M", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. I. Mizniks",
     room: "336",
   },
@@ -561,9 +501,7 @@ export const LECTURES: {
     day: "C",
     time: "1815",
     course: "DatZB032L",
-    groups: [
-      ["D", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["D", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. M. Ivanovs",
     room: "336",
   },
@@ -571,9 +509,7 @@ export const LECTURES: {
     day: "C",
     time: "2000",
     course: "DatZB032L",
-    groups: [
-      ["E", [4, 6, 9, 12, 15]],
-    ],
+    groups: [["E", [4, 6, 9, 12, 15]]],
     professor: "p., Mg. sc. comp. M. Ivanovs",
     room: "336",
   },

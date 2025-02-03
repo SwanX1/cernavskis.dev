@@ -1,8 +1,4 @@
-import ical, { ICalCalendarMethod } from "ical-generator";
-import { _createElement } from "simple-jsx-handler";
 import { Calendar } from "../components/Calendar";
-import { downloadFile } from "../util";
-import { COURSE_NAMES, COURSE_NAMES_SHORT, MONTH_LOCALE_SHORT, TIME_TO_RANGE } from "./lu-dati";
 import { type Groups } from "./table-gen";
 
 export const ExportICSDialog = (attribs: Record<string, unknown>) => {

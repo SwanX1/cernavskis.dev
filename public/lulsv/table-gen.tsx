@@ -1,40 +1,26 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
-import { getWeek } from "../components/Calendar";
 import { createTable, removeAllChildren } from "../util";
 import { createLectureModal } from "./LectionInfoModal";
-import {
-  DAY_LOCALE,
-  DAY_LOCALE_SHORT,
-  COURSE_NAMES,
-  COURSE_NAMES_SHORT,
-  LECTURES,
-  TIME_TO_RANGE,
-  WEEK_ORDINALS,
-} from "./lu-dati";
+import { COURSE_NAMES, COURSE_NAMES_SHORT, DAY_LOCALE, DAY_LOCALE_SHORT, LECTURES, TIME_TO_RANGE } from "./lu-dati";
 
 export type Groups = string[];
-export type Lecture = typeof LECTURES[number];
+export type Lecture = (typeof LECTURES)[number];
 
-export function displayTable(
-  container: HTMLElement,
-  groups: Groups
-): void {
+export function displayTable(container: HTMLElement, groups: Groups): void {
   removeAllChildren(container);
   container.appendChild(<div>{createDataTable(groups)}</div>);
 }
 
-
 export function createDataTable(groups: Groups): HTMLElement {
-  const lections: string[][] = LECTURES
-    .filter(lecture => {
-      for (const [group, week] of lecture.groups) {
-        if (groups.includes(group)) {
-          return true;
-        }
+  const lections: string[][] = LECTURES.filter(lecture => {
+    for (const [group, week] of lecture.groups) {
+      if (groups.includes(group)) {
+        return true;
       }
+    }
 
-      return false;
-    })
+    return false;
+  })
     .sort((a, b) => {
       if (a.day !== b.day) {
         const ad = ["Pr", "O", "T", "C", "Pk"].findIndex(day => day === a.day);

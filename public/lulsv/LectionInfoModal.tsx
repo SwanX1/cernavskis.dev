@@ -1,5 +1,5 @@
 import { _createElement, _fragment } from "simple-jsx-handler";
-import { DAY_LOCALE_LOCATIVE, COURSE_NAMES, TIME_TO_RANGE } from "./lu-dati";
+import { COURSE_NAMES, DAY_LOCALE_LOCATIVE, TIME_TO_RANGE } from "./lu-dati";
 import { type Groups, type Lecture } from "./table-gen";
 
 export function createLectureModal(lecture: Lecture, groups: Groups): HTMLElement {
@@ -48,14 +48,14 @@ export function createLectureModal(lecture: Lecture, groups: Groups): HTMLElemen
                   <td>Telpa</td>
                   <td>{room}</td>
                 </tr>
-                {
-                  groupFilter ? 
-                    <tr>
-                      <td>Plūsma / Grupa</td>
-                      <td>{groupFilter}</td>
-                    </tr>
-                  : <></>
-                }
+                {groupFilter ? (
+                  <tr>
+                    <td>Plūsma / Grupa</td>
+                    <td>{groupFilter}</td>
+                  </tr>
+                ) : (
+                  <></>
+                )}
               </tbody>
             </table>
           </div>
