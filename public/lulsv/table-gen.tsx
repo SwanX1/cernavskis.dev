@@ -13,6 +13,9 @@ export function displayTable(container: HTMLElement, groups: Groups): void {
 
 export function createDataTable(groups: Groups): HTMLElement {
   const lections: string[][] = LECTURES.filter(lecture => {
+    if (lecture.groups.length === 0) {
+      return true;
+    }
     for (const [group, week] of lecture.groups) {
       if (groups.includes(group)) {
         return true;

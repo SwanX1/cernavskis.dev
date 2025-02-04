@@ -120,7 +120,7 @@ export const COURSE_NAMES_SHORT = {
   MateB073: "Lineārā algebra I",
   MateB091: "Mat. anal. I",
   MateB092: "Algebra",
-  DatZB092I: "Izl. kurss mat.",
+  MateB092I: "Izl. kurss mat.",
   MateB097: "Lineārā algebra II",
   SDSKB110: "Internets, tīkla etiķ. un ties. reg.",
   ValoB226: "Angļu val. datorz.",
