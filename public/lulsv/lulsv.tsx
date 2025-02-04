@@ -38,15 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
     </button>
   );
   const tableContainer = (<div></div>) as HTMLDivElement;
-  const example = (
-    <p class="form-input-hint">
-      Ierakstot vārdu, tas parādīsies sarakstā.
-      <br />
-      Jāuzspiež uz viņa, lai vārds būtu precīzs,
-      <br />
-      jo bez tā nevar atrast datus.
-    </p>
-  );
   const error = (
     <p class="form-input-hint" style="display: none;">
       Notika kļūda! Paziņojiet par to administratoram!
@@ -116,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       // exportButton.classList.remove("disabled");
-      example.style.display = "none";
     } catch (e) {
       console.error("Error while doing the main shit", e);
       error.style.display = "block";
@@ -150,7 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
               {/* {exportICSDialog} */}
               {exportButton}
             </div>
-            {example}
           </div>
 
           {tableContainer}
