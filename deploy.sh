@@ -46,7 +46,7 @@ cd $SERVICE_PATH
 # Checkout the latest commit on main
 git config advice.detachedHead false
 git fetch origin -v
-git checkout origin/main
+git checkout origin/main --force
 git clean -fdxe .env
 
 # Install the dependencies
