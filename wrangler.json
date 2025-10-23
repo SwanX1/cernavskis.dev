@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "cernavskis-id-lv",
+  "name": "winter-heart-63eb",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-08",
 	"upload_source_maps": true,
