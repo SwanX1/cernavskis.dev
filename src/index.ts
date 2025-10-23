@@ -1,25 +1,13 @@
-import chalk from "chalk-template";
-import compression from "compression";
-import express from "express";
-import { applyConfiguration, getLogger } from "./util";
-
-const app = express();
-const logger = getLogger();
-
-applyConfiguration(app);
-
-app.use(compression({ level: 9 }));
-app.get("/tools/lu-saraksts", (_req, res) => res.redirect(301, "/lulsv"));
-
-app.use(
-  express.static(new URL("../dist", import.meta.url).pathname, {
-    extensions: ["html"],
-  })
-);
-
-logger.info(chalk`Bun\t{yellow ${Bun.version}}`);
-if (app.get("trust proxy")) {
-  logger.info("Assuming running behind proxy");
-}
-
-app.listen(3000, () => logger.info("Running on port", 3000));
+export default {
+	/**
+	 * This is the standard fetch handler for a Cloudflare Worker
+	 *
+	 * @param request - The request submitted to the Worker from the client
+	 * @param env - The interface to reference bindings declared in wrangler.jsonc
+	 * @param ctx - The execution context of the Worker
+	 * @returns The response to be sent back to the client
+	 */
+	async fetch(request, env, ctx): Promise<Response> {
+		return new Response("<h1>Under Construction</h1>", { status: 200, headers: { "Content-Type": "text/html" } });
+	},
+} satisfies ExportedHandler<Env>;
